@@ -1,0 +1,56 @@
+CREATE DATABASE ALFS
+USE ALFS
+
+CREATE TABLE [Users] (
+    User_ID INT PRIMARY KEY IDENTITY,
+    FName VARCHAR(100) NOT NULL,
+    Lname VARCHAR(100) NOT NULL,
+    Email VARCHAR(255) NOT NULL UNIQUE,
+    Password VARCHAR(255) NOT NULL,
+    Birthday DATE,
+    Phone varchar(15),
+    Temporary BIT NOT NULL DEFAULT 0,
+    Registration_Date DATE NOT NULL DEFAULT GETDATE(),
+    isAdmin BIT NOT NULL DEFAULT 0,
+    Balance DECIMAL(10, 2) DEFAULT 0.00
+);
+
+
+CREATE TABLE Exercise_Type (
+    Ex_ID INT PRIMARY KEY IDENTITY,
+    Name VARCHAR(100) NOT NULL
+);
+
+
+CREATE TABLE Class (
+    Class_ID INT PRIMARY KEY IDENTITY,
+    Date DATE NOT NULL,
+    Time_start TIME NOT NULL,
+    Time_end TIME NOT NULL,
+    Max_capacity INT NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    Ex_ID INT NOT NULL FOREIGN KEY REFERENCES Exercise_Type(Ex_ID)
+);
+
+
+CREATE TABLE Enrollment (
+    Class_ID INT NOT NULL FOREIGN KEY REFERENCES Class(Class_ID),
+    User_ID INT NOT NULL FOREIGN KEY REFERENCES [Users](User_ID),
+    Attendance_Status BIT NOT NULL DEFAULT 0,
+    PRIMARY KEY (Class_ID, User_ID)
+);
+
+
+CREATE TABLE Payment_Type (
+    Payment_Type_ID INT PRIMARY KEY IDENTITY,
+    P_Name VARCHAR(50) NOT NULL
+);
+
+
+CREATE TABLE Payment (
+    Payment_ID INT PRIMARY KEY IDENTITY,
+    Amount DECIMAL(10, 2) NOT NULL,
+    Payment_Datetime DATETIME NOT NULL DEFAULT GETDATE(),
+    User_ID INT NOT NULL FOREIGN KEY REFERENCES [Users](User_ID),
+    Payment_Type_ID INT NOT NULL FOREIGN KEY REFERENCES Payment_Type(Payment_Type_ID)
+);
