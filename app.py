@@ -1,6 +1,7 @@
 from flask import Flask
-from backend.blueprints import register_blueprints  
-from sqlalchemy import create_engine, text
+from backend.blueprints import register_blueprints 
+
+
 
 
 def create_app():
@@ -13,16 +14,6 @@ def create_app():
 if __name__ == '__main__':
     app = create_app()  
 
-    connection_string = "mssql+pyodbc://ALFS_DB:Ew6uEb8Y@apollo.in.cs.ucy.ac.cy/ALFS_DB?driver=ODBC+Driver+17+for+SQL+Server"
-
-    engine = create_engine(connection_string)  #with engine.connect as connection:
-    
-    #with engine.connect() as connection:
-    #    connection.execute(text(qry))
-    #    connection.commit()
-    #    connection.close()
-    #    print('done')   
-    
-    
     app.run(debug=True)  
     
+    #result = add_new_user_to_db('pantelis', 'kanaris', 'pasok@gmail.com', '123abc', '12-1-2004', '23424524')

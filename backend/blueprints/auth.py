@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from flask import render_template
-
+from  scripts.addNewUser import AddNewUserToDb
 
 auth = Blueprint('auth', __name__)
 
@@ -18,7 +18,8 @@ def login():
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup(): 
 
-    if request.method == 'POST':
+    if request.method == 'POST': 
+        AddNewUserToDb('pantelis', 'kanaris', 'pasok@gmail.com', 'password1231')     
         return 'signup success'
      
     if request.method == 'GET':
