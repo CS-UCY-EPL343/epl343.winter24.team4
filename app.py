@@ -16,4 +16,3 @@ if __name__ == '__main__':
 
     app.run(debug=True)  
     
-    #result = add_new_user_to_db('pantelis', 'kanaris', 'pasok@gmail.com', '123abc', '12-1-2004', '23424524')
