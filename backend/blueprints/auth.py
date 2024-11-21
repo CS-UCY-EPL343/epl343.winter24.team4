@@ -19,7 +19,7 @@ def login():
 def signup(): 
 
     if request.method == 'POST': 
-        AddNewUserToDb('pantelis', 'kanaris', 'pasok@gmail.com', 'password1231')     
+        AddNewUserToDb('pantelis', 'IsTheBest', 'pasokw@gmail.com', 'password1231')     
         return 'signup success'
      
     if request.method == 'GET':
