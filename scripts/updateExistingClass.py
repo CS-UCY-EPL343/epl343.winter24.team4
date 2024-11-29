@@ -2,7 +2,7 @@ from database import *
 from sqlalchemy import text
 from database import execute_query
 
-def update_class(class_id, date=None, time_start=None, time_end=None, max_capacity=None, price=None, ex_id=None):
+def UpdateClass(class_id, date=None, time_start=None, time_end=None, max_capacity=None, price=None, ex_id=None):
     updates = []
     params = []
 

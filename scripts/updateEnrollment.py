@@ -2,7 +2,7 @@ from database import *
 from sqlalchemy import text
 from database import execute_query
 
-def update_enrollment(class_id, user_id, attendance_status):
+def UpdateEnrollment(class_id, user_id, attendance_status):
     query = """
     UPDATE Enrollment
     SET Attendance_Status = ?

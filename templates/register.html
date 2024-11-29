@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .class-list {
+            max-width: 800px;
+            margin: auto;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .class-list th, .class-list td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .class-list th {
+            background-color: #f2f2f2;
+        }
+        .class-list tr:hover {
+            background-color: #f9f9f9;
+        }
+        button {
+            padding: 8px 12px;
+            color: white;
+            background-color: #28a745;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<h2 style="text-align:center;">Available Classes This Week</h2>
+
+<table class="class-list">
+    <thead>
+        <tr>
+            <th>Class Name</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Max Capacity</th>
+            <th>Price</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for class in classes %}
+        <tr>
+            <td>{{ class.Ex_ID }}</td> <!-- Assuming Ex_ID maps to the class name -->
+            <td>{{ class.Date }}</td>
+            <td>{{ class.Time_start }}</td>
+            <td>{{ class.Time_end }}</td>
+            <td>{{ class.Max_capacity }}</td>
+            <td>${{ class.Price }}</td>
+            <td>
+                <form action="/register" method="POST">
+                    <input type="hidden" name="class_id" value="{{ class.Class_ID }}">
+                    <input type="hidden" name="user_id" value="{{ user_id }}"> <!-- Assuming user_id is passed to the template -->
+                    <button type="submit">Enroll</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
