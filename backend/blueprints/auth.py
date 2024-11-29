@@ -1,29 +1,24 @@
-from flask import Blueprint, redirect, request
-from flask import render_template
+from flask import Blueprint, redirect, request, render_template, jsonify
 from datetime import datetime, timedelta
-from  scripts.addNewUser import AddNewUserToDb
+from scripts.addNewUser import AddNewUserToDb
 from scripts.addNewEnrollment import AddEnrollment
 from scripts.addNewClass import AddClass
 from scripts.selectClass import *
 from scripts.selectExerciseType import *
-from flask import jsonify
 
 auth = Blueprint('auth', __name__)
 
-
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-
     if request.method == 'POST':
-        return 'post login'
-
-    if request.method == 'GET':
-        'login'  #return render_template('/login.html')
+        return jsonify({"message": "Login successful."}), 200  # Example JSON response
+    elif request.method == 'GET':
+        return jsonify({"message": "Login page."}), 200  # Example JSON response
 
 
 @auth.route('/signup', methods=['GET', 'POST'])
-def signup(): 
-    if request.method == 'POST': 
+def signup():
+    if request.method == 'POST':
         # Retrieve form data
         first_name = request.form.get('FName')
         last_name = request.form.get('Lname')
@@ -34,34 +29,48 @@ def signup():
 
         # Basic validation
         if not all([first_name, last_name, email, password]):
-            return 'All required fields must be filled out.', 400
+            return jsonify({"error": "All required fields must be filled out."}), 400
 
         # Add user to the database
         try:
-            success = AddNewUserToDb(Fname=first_name, Lname=last_name, Email=email, Password=password, Birthday=birthday, Phone=phone)
+            success = AddNewUserToDb(
+                Fname=first_name,
+                Lname=last_name,
+                Email=email,
+                Password=password,
+                Birthday=birthday,
+                Phone=phone
+            )
             if success:
-                return 'Signup successful!', 201
+                return jsonify({"message": "Signup successful."}), 201
             else:
-                return 'Signup failed. Please try again.', 500
+                return jsonify({"error": "Signup failed. Please try again."}), 500
         except Exception as e:
-            return f"An error occurred: {str(e)}", 500
+            return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
     if request.method == 'GET':
-        # Render the signup form
-        return render_template('/signup.html')
-    
+        return jsonify({"message": "Signup page."}), 200  # Example JSON response
+
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        # Handle class registration form submission
-        user_id = request.form.get('user_id')  # Example: hidden field or session user ID
-        class_id = request.form.get('class_id')  # Selected class ID
-        return AddEnrollment(class_id=class_id,user_id=user_id)
-        
-    if request.method == 'GET':
-        # Fetch all classes for the current week
         try:
+            # Handle class registration form submission
+            user_id = request.form.get('user_id')  # Example: hidden field or session user ID
+            class_id = request.form.get('class_id')  # Selected class ID
+
+            success = AddEnrollment(class_id=class_id, user_id=user_id)
+            if success:
+                return jsonify({"message": "Registration successful."}), 201
+            else:
+                return jsonify({"error": "Failed to register for class."}), 500
+        except Exception as e:
+            return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
+    if request.method == 'GET':
+        try:
+            # Fetch all classes for the current week
             classes_json = SelectAllClasses()  # Fetch all classes
             classes = json.loads(classes_json)  # Parse JSON into Python object
 
@@ -73,10 +82,10 @@ def register():
                 if today.date() <= datetime.strptime(c['Date'], '%Y-%m-%d').date() <= end_of_week.date()
             ]
 
-            # Render the class registration page with the weekly classes
-            return render_template('register.html', classes=weekly_classes, user_id=1)  # Replace user_id=1 with actual user ID logic
+            return jsonify({"weekly_classes": weekly_classes}), 200
         except Exception as e:
-            return f"Error loading classes: {e}"
+            return jsonify({"error": f"Error loading classes: {str(e)}"}), 500
+
 
 @auth.route('/addClass', methods=['GET', 'POST'])
 def add_class():
@@ -120,8 +129,7 @@ def add_class():
                 return jsonify({"error": "Failed to fetch exercise types."}), 500
 
             exercise_types = json.loads(result)
-            # Render the form with exercise types
-            return render_template('addClass.html', exercise_types=exercise_types)
+            return jsonify({"exercise_types": exercise_types}), 200
 
         except Exception as e:
             return jsonify({"error": f"An error occurred: {str(e)}"}), 500
