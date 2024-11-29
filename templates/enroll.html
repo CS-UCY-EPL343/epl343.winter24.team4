@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Class Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .day {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .day-header {
+            font-weight: bold;
+            text-align: center;
+            background-color: #f2f2f2;
+            border-bottom: 1px solid #ccc;
+            padding: 5px 0;
+        }
+        .class {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e9f5e9;
+            border: 1px solid #28a745;
+            border-radius: 5px;
+        }
+        .class:hover {
+            background-color: #d7ebd7;
+        }
+        .class h4 {
+            margin: 0 0 5px;
+            font-size: 1em;
+            color: #28a745;
+        }
+        .class p {
+            margin: 0;
+            font-size: 0.9em;
+        }
+        button {
+            margin-top: 5px;
+            padding: 5px 10px;
+            color: white;
+            background-color: #28a745;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<h2 style="text-align:center;">Class Schedule for This Week</h2>
+
+<div class="calendar">
+    <!-- Each day in the week -->
+    {% for day in week_days %}
+    <div class="day">
+        <div class="day-header">{{ day.date }}</div>
+        {% for class in day.classes %}
+        <div class="class">
+            <h4>{{ class.Ex_ID }}</h4> <!-- Assuming Ex_ID maps to the class name -->
+            <p><strong>Time:</strong> {{ class.Time_start }} - {{ class.Time_end }}</p>
+            <p><strong>Price:</strong> ${{ class.Price }}</p>
+            <p><strong>Capacity:</strong> {{ class.Max_capacity }}</p>
+            <form action="/enroll" method="POST">
+                <input type="hidden" name="class_id" value="{{ class.Class_ID }}">
+                <input type="hidden" name="user_id" value="{{ user_id }}"> <!-- Assuming user_id is passed to the template -->
+                <button type="submit">Enroll</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>
