@@ -9,7 +9,7 @@ from datetime import timedelta
 
 auth = Blueprint('auth', __name__)
 
-@auth.route('/login', methods=['GET', 'POST'])
+@auth.route('/login', methods=['GET', 'POST']) #TODO:NEEDS CHECKS IF ITS FOR THE BACK END
 def login():
     if request.method == 'POST':
         return jsonify({"message": "Login successful."}), 200  # Example JSON response
@@ -17,7 +17,7 @@ def login():
         return jsonify({"message": "Login page."}), 200  # Example JSON response
 
 
-@auth.route('/signup', methods=['GET', 'POST'])
+@auth.route('/signup', methods=['GET', 'POST']) #TODO: NEEDS LOGIC CHECKS IF ITS FOR THE BACK END
 def signup():
     if request.method == 'POST':
         # Retrieve form data
@@ -106,7 +106,7 @@ def register():
             return jsonify({"error": f"Error loading classes: {str(e)}"}), 500
         
         
-@auth.route('/addClass', methods=['GET', 'POST'])
+@auth.route('/addClass', methods=['GET', 'POST']) #TODO:NEEDS SOME CHECKS 
 def add_class():
     if request.method == 'POST':
         try:
