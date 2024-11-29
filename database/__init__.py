@@ -2,6 +2,8 @@ from sqlalchemy import create_engine
 import json
 from sqlalchemy import text
 import logging
+from datetime import date, time, datetime, timedelta
+from decimal import Decimal
 #connection_string = "mssql+pyodbc://ALFS_DB:Ew6uEb8Y@apollo.in.cs.ucy.ac.cy/ALFS_DB?driver=ODBC+Driver+17+for+SQL+Server"
 # Connection string
 connection_string = "mssql+pyodbc://localhost/343?driver=ODBC+Driver+17+for+SQL+Server"
@@ -46,18 +48,27 @@ def execute_query(query: str, params=None):
                 try:
                     result = connection.execute(stmt, params or {})
                     rows = result.fetchall()
-                    # Convert rows to dictionaries using _mapping
-                    results = [dict(row._mapping) for row in rows]
+                    
+                    # Convert rows to dictionaries and handle non-serializable types
+                    def serialize_row(row):
+                        return {
+                            key: (
+                                value.isoformat() if isinstance(value, (date, time, datetime))
+                                else float(value) if isinstance(value, Decimal)
+                                else value
+                            )
+                            for key, value in row._mapping.items()
+                        }
+
+                    results = [serialize_row(row) for row in rows]
                     return json.dumps(results)
                 except Exception as read_error:
                     print(f"SELECT query error: {read_error}")
                     return False
 
-            # Unsupported query types
             else:
                 print(f"Unsupported query type: {query_type}")
                 return False
-
     except Exception as e:
         print(f"Unexpected error: {e}")
         return False

@@ -5,6 +5,7 @@ from scripts.addNewEnrollment import AddEnrollment
 from scripts.addNewClass import AddClass
 from scripts.selectClass import *
 from scripts.selectExerciseType import *
+from datetime import timedelta
 
 auth = Blueprint('auth', __name__)
 
@@ -49,18 +50,17 @@ def signup():
             return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
     if request.method == 'GET':
-        return jsonify({"message": "Signup page."}), 200  # Example JSON response
+        return render_template('/signup.html')
 
 
-@auth.route('/register', methods=['GET', 'POST'])
+@auth.route('/enroll', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         try:
-            # Handle class registration form submission
-            user_id = request.form.get('user_id')  # Example: hidden field or session user ID
-            class_id = request.form.get('class_id')  # Selected class ID
+            user_id = request.form.get('user_id')
+            class_id = request.form.get('class_id')
 
-            success = AddEnrollment(class_id=class_id, user_id=user_id)
+            success = AddEnrollment(class_id=class_id, user_id=4) #TODO: MAKE IT DYNAMIC WITH THE LOGIN
             if success:
                 return jsonify({"message": "Registration successful."}), 201
             else:
@@ -70,23 +70,42 @@ def register():
 
     if request.method == 'GET':
         try:
-            # Fetch all classes for the current week
-            classes_json = SelectAllClasses()  # Fetch all classes
-            classes = json.loads(classes_json)  # Parse JSON into Python object
+            # Fetch all classes
+            classes_json = SelectAllClasses()
+            classes = json.loads(classes_json)
 
-            # Filter for classes in the current week
+            # Debug: Print all classes
+            print("Fetched Classes:", classes)
+
+            # Determine the start and end of the current week (Monday to Sunday)
             today = datetime.today()
-            end_of_week = today + timedelta(days=7)
-            weekly_classes = [
-                c for c in classes
-                if today.date() <= datetime.strptime(c['Date'], '%Y-%m-%d').date() <= end_of_week.date()
+            start_of_week = today - timedelta(days=today.weekday())  # Monday of the current week
+            end_of_week = start_of_week + timedelta(days=6)          # Sunday of the current week
+
+            # Debug: Print the week range
+            print("Week Range:", start_of_week.date(), "to", end_of_week.date())
+
+            # Group classes by day within the week
+            week_days = [
+                {
+                    "date": (start_of_week + timedelta(days=i)).strftime("%Y-%m-%d"),
+                    "classes": [
+                        c for c in classes
+                        if datetime.strptime(c['Date'], '%Y-%m-%d').date() == (start_of_week + timedelta(days=i)).date()
+                    ]
+                }
+                for i in range(7)
             ]
 
-            return jsonify({"weekly_classes": weekly_classes}), 200
+            # Debug: Print the week_days structure
+            print("Week Days:", week_days)
+
+            return render_template('/enroll.html', week_days=week_days, user_id=1)
         except Exception as e:
+            print(f"Error: {e}")
             return jsonify({"error": f"Error loading classes: {str(e)}"}), 500
-
-
+        
+        
 @auth.route('/addClass', methods=['GET', 'POST'])
 def add_class():
     if request.method == 'POST':
@@ -129,7 +148,8 @@ def add_class():
                 return jsonify({"error": "Failed to fetch exercise types."}), 500
 
             exercise_types = json.loads(result)
-            return jsonify({"exercise_types": exercise_types}), 200
+            # Render the form with exercise types
+            return render_template('addClass.html', exercise_types=exercise_types)
 
         except Exception as e:
-            return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+            return jsonify({"error": f"An error occurred: {str(e)}"}), 500 
