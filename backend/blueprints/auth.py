@@ -53,7 +53,7 @@ def signup():
         return render_template('/signup.html')
 
 
-@auth.route('/enroll', methods=['GET', 'POST'])
+@auth.route('/enroll', methods=['GET', 'POST']) #TODO:Check for max capacity.
 def register():
     if request.method == 'POST':
         try:
