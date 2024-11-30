@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+{% extends "navbar.html" %}
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,26 +9,10 @@
 </head>
 <body>
     <header>
-
-        <div class="logo">
-            <button class="logo-btn" alt="Fitness Studio Logo" onclick="location.href='#home';">
-            </button>
-        </div>
-
-        <nav class="navbar">
-            <a href="#calendar"><u>Calendar</u></a>
-            <a href="#enrollments"><u>Enrollments</u></a>
-            <a href="#payments"><u>Payments</u></a>
-            <a href="#about"><u>About Us</u></a>
-        </nav>
-
-        <div class="login">
-            <a href="#login" class="login-link">
-                <img src="Pictures/Account-icon.png" alt="LogIn Icon" class="login-image">
-                <span class="login-text"><u>Login</u></span>
-            </a>
-        </div>
-
+        <script src="calendar.js"></script>
+        <script>
+            window.onload = loadNavbar;
+        </script>
     </header>
 
     <main>
@@ -37,18 +22,18 @@
 
                 <p>
                     <a href="tel:+357 99999999" class="icon-link">
-                        <img src="Pictures/phone-icon.png" alt="Phone Icon" class="icon"> +357 99999999
+                        <img src="../Pictures/phone-icon.png" alt="Phone Icon" class="icon"> +357 99999999
                     </a>
                 </p>
 
                 <p>
                     <a href="https://www.instagram.com/agapios.agapiou/" target="_blank" class="icon-link">
-                        <img src="Pictures/instagram-icon.png" alt="Instagram Icon" class="icon"> Agapios Agapiou
+                        <img src="../Pictures/instagram-icon.png" alt="Instagram Icon" class="icon"> Agapios Agapiou
                     </a>
                 </p>
                 <p>
                     <a href="https://maps.app.goo.gl/DZmL6jm8wez21Dhy8" target="_blank" class="icon-link">
-                        <img src="Pictures/location-icon.png" alt="Location Icon" class="icon"> Ipokratous Street 6, Perahoryo
+                        <img src="../Pictures/location-icon.png" alt="Location Icon" class="icon"> Ipokratous Street 6, Perahoryo
                     </a>
                 </p>
             </div>

@@ -9,7 +9,7 @@
     font-family: Arial, sans-serif;
     color: #fff;
 
-    background-image: url(Pictures/background-image2.jpg);
+    background-image: url(../Pictures/background-image2.jpg);
     background-size: cover;
     background-position: center;
 
@@ -42,7 +42,7 @@
     width: 100px;
     height: 60px;
 
-    background: url('Pictures/logo-image.png') no-repeat center/contain;
+    background: url('../Pictures/logo-image.png') no-repeat center/contain;
 
   }
   .logo-btn {
