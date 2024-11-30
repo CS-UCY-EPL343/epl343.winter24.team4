@@ -1,0 +1,51 @@
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #navbar {
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .content {
+            padding-top: 60px;
+        }
+
+        .date-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        .box {
+            display: flex;
+            width: 80%;
+            height: 70vh;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+
+        .column {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border-right: 1px solid grey;
+        }
+
+        .column:last-child {
+            border-right: none;
+        }

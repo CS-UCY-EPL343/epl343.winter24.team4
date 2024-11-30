@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7 Column Box - Flexbox</title>
+    <link rel="stylesheet" href="calendar.css">
+</head>
+<body>
+
+    <div id="navbar">
+        <script>
+            window.onload = loadNavbar;
+        </script>
+    </div>
+
+    <div class="content">
+        <div class="date-box" id="weekDisplay"></div>
+
+        <div class="box">
+            <div class="column">MONDAY</div>
+            <div class="column">TUESDAY</div>
+            <div class="column">WEDNESDAY</div>
+            <div class="column">THURSDAY</div>
+            <div class="column">FRIDAY</div>
+            <div class="column">SATURDAY</div>
+            <div class="column">SUNDAY</div>
+        </div>
+    </div>
+
+    <script src="calendar.js"></script>
+    <script>
+        window.onload = function() {
+            const weekDates = getCurrentWeekDates();
+            document.getElementById("weekDisplay").innerHTML = "WEEK: " + weekDates.start + " - " + weekDates.end;
+        };
+    </script>
+
+</body>
+</html>
