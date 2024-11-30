@@ -1,0 +1,240 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    color: #fff;
+
+    background-image: url(Pictures/background-image2.jpg);
+    background-size: cover;
+    background-position: center;
+
+    display: flex;
+    flex-direction: column;
+    
+    align-items: center;
+    min-height: 100vh;
+    
+}
+  
+  /* Header Section */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, 0.8);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 10;
+  }
+
+
+
+  
+  /*-----Logo-----*/
+  .logo {
+    width: 100px;
+    height: 60px;
+
+    background: url('Pictures/logo-image.png') no-repeat center/contain;
+
+  }
+  .logo-btn {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+
+
+
+/*-----Navigation Bar-----*/
+  .navbar a {
+    color: #ffffff;
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 2cap;
+  }
+  
+  .navbar a:hover {
+    color: rgb(171, 252, 41);
+  }
+
+  
+
+
+
+ /* Login Container */
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+}
+
+/* Link styling for the login */
+.login-link {
+  display: flex;
+  flex-direction: column; /* Stack image and text vertically */
+  align-items: center;
+  text-decoration: none; /* Remove underline from the link */
+  color: #ffffff;
+}
+
+/* Login Image */
+.login-image {
+  width: 50px; /* Adjust icon size */
+  height: 50px;
+  margin-bottom: 10px; /* Space between the image and the text */
+}
+
+/* Login Text */
+.login-text {
+  margin-top: 5px; /* Adjust spacing if necessary */
+  font-size: 14px; /* Adjust font size as needed */
+  font-weight: bold;
+  text-align: center;
+  color: #ffffff;
+}
+
+/* Hover Effect */
+.login-link:hover .login-text {
+  color: rgb(171, 252, 41); /* Change text color on hover */
+}
+
+.login-link:hover .login-image {
+  transform: scale(1.1); /* Slight zoom effect for the image */
+  transition: transform 0.3s ease;
+}
+
+
+
+
+  /* Hero Section */
+.hero {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.hero-content {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+}
+
+.hero-content h1 {
+  font-size: rem;
+  margin-bottom: 20px;
+  color: rgb(255, 255, 255);
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin: 10px 0;
+}
+
+.icon-link {
+  color: #ffffff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.icon-link:hover {
+  text-decoration: underline;
+  color: rgb(171, 252, 41);
+  transform: scale(1.1); /* Slight zoom effect for the image */
+  transition: transform 0.3s ease;
+}
+
+.icon {
+  width: 50px; /* Adjust icon size */
+  height: 50px;
+  margin-right: 30px; /* Spacing between icon and text */
+  margin-bottom: 10px;;
+}
+
+
+
+/*
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.menu-toggle span {
+  background: #fff;
+  height: 3px;
+  width: 25px;
+  margin: 4px 0;
+}
+
+.navbar.active {
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.9);
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  padding: 10px;
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: flex;
+  }
+
+  .navbar {
+    display: none;
+  }
+
+  .navbar.active {
+    display: flex;
+  }
+}
+
+
+*/
+
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .navbar {
+      display: none;
+    }
+  
+    .hero-content h1 {
+      font-size: 2rem;
+    }
+  
+    .hero-content p {
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .hero-content {
+      padding: 15px 20px;
+    }
+  
+    .hero-content h1 {
+      font-size: 1.5rem;
+    }
+  }
+  
