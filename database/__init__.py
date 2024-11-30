@@ -4,9 +4,9 @@ from sqlalchemy import text
 import logging
 from datetime import date, time, datetime, timedelta
 from decimal import Decimal
-#connection_string = "mssql+pyodbc://ALFS_DB:Ew6uEb8Y@apollo.in.cs.ucy.ac.cy/ALFS_DB?driver=ODBC+Driver+17+for+SQL+Server"
+connection_string = "mssql+pyodbc://ALFS_DB:Ew6uEb8Y@apollo.in.cs.ucy.ac.cy/ALFS_DB?driver=ODBC+Driver+17+for+SQL+Server"
 # Connection string
-connection_string = "mssql+pyodbc://localhost/343?driver=ODBC+Driver+17+for+SQL+Server"
+#connection_string = "mssql+pyodbc://localhost/343?driver=ODBC+Driver+17+for+SQL+Server"
 engine = create_engine(connection_string, isolation_level="AUTOCOMMIT")
 
 
