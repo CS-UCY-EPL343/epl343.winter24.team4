@@ -8,4 +8,4 @@ def home():
 
 @main.route('/home')
 def hom():
-    return render_template("calendar/calendar.html")
+    return render_template("home.html")
