@@ -68,3 +68,15 @@ def SelectUsersOfClass(time_start=None, date=None, class_id=None):
     else:
         return "Invalid input. Provide either Class_ID or both Time_Start and Date."
 
+def selectWeekClasses(start_date,end_date):
+    query=  """
+            Select 
+                *
+            FROM 
+                Class
+            WHERE
+                class.Date BETWEEN :start_date AND :end_date;
+            """
+    params = {"start_date": start_date, "end_date": end_date}
+    return execute_query_dict(query, params)
+
