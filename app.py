@@ -1,3 +1,5 @@
+import secrets
+
 from flask import Flask
 from backend.blueprints import register_blueprints 
 
@@ -6,7 +8,8 @@ from backend.blueprints import register_blueprints
 
 def create_app():
     app = Flask(__name__)
-    register_blueprints(app)  
+    app.secret_key = secrets.token_hex(32)
+    register_blueprints(app)
 
     return app
 

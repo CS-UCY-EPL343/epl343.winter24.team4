@@ -1,56 +1,97 @@
+from flask import session, url_for
+from scripts.user.addNewUser import AddNewUserToDb
+import bcrypt
 from flask import Blueprint, redirect, request, render_template, jsonify
-from datetime import datetime, timedelta
-from scripts.addNewUser import AddNewUserToDb
 from scripts.addNewEnrollment import AddEnrollment
 from scripts.addNewClass import AddClass
 from scripts.selectClass import *
 from scripts.selectExerciseType import *
 from datetime import timedelta
 
+from scripts.user.checkUserCredentials import checkUserCredentials
+
 auth = Blueprint('auth', __name__)
 
-@auth.route('/login', methods=['GET', 'POST']) #TODO:NEEDS CHECKS IF ITS FOR THE BACK END
+def hash_password(password):
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed_password.decode('utf-8')
+
+def check_password(entered_password, stored_hash):
+    return bcrypt.checkpw(entered_password.encode('utf-8'), stored_hash.encode('utf-8'))
+
+
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        return jsonify({"message": "Login successful."}), 200  # Example JSON response
+        email = request.form.get('Email')
+        password = request.form.get('Password')
+
+        # Check if the user exists
+        user = checkUserCredentials(email)
+
+        if user:
+            stored_password = user[0].get("Password") if isinstance(user, list) else user.get("Password")
+
+            if stored_password:
+                # Check if the password matches
+                if check_password(password, stored_password):
+                    # Save the user in the session
+                    session['user_id'] = user[0].get('id')  # Assuming 'id' is the user identifier
+                    return jsonify({"message": "Login successful", "user": user[0]}), 200
+                else:
+                    return jsonify({"message": "Invalid email or password"}), 401
+            else:
+                return jsonify({"message": "Password not found for this user"}), 400
+        else:
+            return jsonify({"message": "User not found"}), 404
+
     elif request.method == 'GET':
-        return jsonify({"message": "Login page."}), 200  # Example JSON response
+        if 'user_id' in session:  # Check if the user is already logged in
+            return redirect(url_for('main.dashboard'))  # Redirect to a dashboard or user page
+        return render_template('/login.html')
 
 
-@auth.route('/signup', methods=['GET', 'POST']) #TODO: NEEDS LOGIC CHECKS IF ITS FOR THE BACK END
+@auth.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        # Retrieve form data
         first_name = request.form.get('FName')
-        last_name = request.form.get('Lname')
+        last_name = request.form.get('LName')
         email = request.form.get('Email')
         password = request.form.get('Password')
         birthday = request.form.get('Birthday')  # Optional field
         phone = request.form.get('Phone')  # Optional field
 
-        # Basic validation
         if not all([first_name, last_name, email, password]):
             return jsonify({"error": "All required fields must be filled out."}), 400
 
-        # Add user to the database
         try:
             success = AddNewUserToDb(
                 Fname=first_name,
                 Lname=last_name,
                 Email=email,
-                Password=password,
+                Password=hash_password(password),
                 Birthday=birthday,
                 Phone=phone
             )
             if success:
-                return jsonify({"message": "Signup successful."}), 201
+                return redirect(url_for('auth.login'))  # Redirect to login after successful signup
             else:
                 return jsonify({"error": "Signup failed. Please try again."}), 500
         except Exception as e:
             return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
-    if request.method == 'GET':
+    elif request.method == 'GET':
+        if 'user_id' in session:
+            return redirect(url_for('main.dashboard'))  # Redirect to dashboard if already logged in
         return render_template('/signup.html')
+
+
+# Add a logout route to clear the session
+@auth.route('/logout', methods=['GET'])
+def logout():
+    session.pop('user_id', None)  # Remove the user from session
+    return redirect(url_for('auth.login'))  # Redirect to login page after logout
 
 
 @auth.route('/enroll', methods=['GET', 'POST']) #TODO:Check for max capacity.
