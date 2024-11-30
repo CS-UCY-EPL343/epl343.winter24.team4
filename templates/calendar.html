@@ -1,19 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7 Column Box - Flexbox</title>
-    <link rel="stylesheet" href="calendar.css">
-</head>
-<body>
+{% extends "./NavBar/navbar.html" %}
 
-    <div id="navbar">
-        <script>
-            window.onload = loadNavbar;
-        </script>
-    </div>
-
+{% block content %}
+<link rel="stylesheet" href="../static/calendar.css">
+<main>
     <div class="content">
         <div class="date-box" id="weekDisplay"></div>
 
@@ -28,13 +17,12 @@
         </div>
     </div>
 
-    <script src="calendar.js"></script>
+    <script src="../static/calendar.js"></script>
     <script>
         window.onload = function() {
             const weekDates = getCurrentWeekDates();
             document.getElementById("weekDisplay").innerHTML = "WEEK: " + weekDates.start + " - " + weekDates.end;
         };
     </script>
-
-</body>
-</html>
+</main>
+{% endblock %}

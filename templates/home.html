@@ -1,0 +1,29 @@
+<!-- home.html -->
+{% extends "./NavBar/navbar.html" %}
+
+{% block content %}
+<main>
+    <div class="hero">
+        <div class="hero-content">
+            <h1>ActiveLife <br>Fitness Studio</h1><br>
+
+            <p>
+                <a href="tel:+357 99999999" class="icon-link">
+                    <img src="{{ url_for('static', filename='Pictures/phone-icon.png') }}" alt="Phone Icon" class="icon"> +357 99999999
+                </a>
+            </p>
+
+            <p>
+                <a href="https://www.instagram.com/agapios.agapiou/" target="_blank" class="icon-link">
+                    <img src="{{ url_for('static', filename='Pictures/instagram-icon.png') }}" alt="Instagram Icon" class="icon"> Agapios Agapiou
+                </a>
+            </p>
+            <p>
+                <a href="https://maps.app.goo.gl/DZmL6jm8wez21Dhy8" target="_blank" class="icon-link">
+                    <img src="{{ url_for('static', filename='Pictures/location-icon.png') }}" alt="Location Icon" class="icon"> Ipokratous Street 6, Perahoryo
+                </a>
+            </p>
+        </div>
+    </div>
+</main>
+{% endblock %}

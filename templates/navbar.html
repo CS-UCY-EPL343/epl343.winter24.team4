@@ -1,0 +1,36 @@
+<!-- navbar.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base Template</title>
+    <link rel="stylesheet" href="/style_home.css">
+</head>
+<body>
+    <header>
+        <!-- Navbar with links -->
+        <div class="logo">
+            <button class="logo-btn" alt="Fitness Studio Logo" onclick="location.href='#home';"></button>
+        </div>
+
+        <nav class="navbar">
+            <a href="#calendar"><u>Calendar</u></a>
+            <a href="#enrollments"><u>Enrollments</u></a>
+            <a href="#payments"><u>Payments</u></a>
+            <a href="#about"><u>About Us</u></a>
+        </nav>
+
+        <div class="login">
+            <a href="#login" class="login-link">
+                <img src="/Pictures/Account-icon.png" alt="LogIn Icon" class="login-image">
+                <span class="login-text"><u>Login</u></span>
+            </a>
+        </div>
+    </header>
+    {% block content %}
+    <!-- Page-specific content will go here -->
+    {% endblock %}
+
+</body>
+</html>
