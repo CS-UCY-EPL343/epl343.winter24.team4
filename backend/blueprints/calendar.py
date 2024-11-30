@@ -1,4 +1,3 @@
-from flask import Blueprint
 from scripts.addNewEnrollment import AddEnrollment
 from scripts.addNewClass import AddClass
 from scripts.selectClass import *
@@ -8,9 +7,36 @@ from flask import Blueprint, request, render_template, jsonify
 
 calendar = Blueprint('calendar', __name__)
 
-# @calendar.route('/calendar', methods=['GET', 'POST'])
-# def calendar():
-#     if request.method == 'GET':
+@calendar.route('/calendar', methods=['GET', 'POST'])
+def calendar():
+    if request.method == 'GET':
+        # Check for query parameters for start and end dates (optional)
+        start_date_str = request.args.get('start_date')
+        end_date_str = request.args.get('end_date')
+
+        # If not provided, default to the current week (Monday to Sunday)
+        today = datetime.today()
+
+        if not start_date_str or not end_date_str:
+            start_of_week = today - timedelta(days=today.weekday())  # Monday
+            end_of_week = start_of_week + timedelta(days=6)  # Sunday
+        else:
+            try:
+                start_of_week = datetime.strptime(start_date_str, '%Y-%m-%d')
+                end_of_week = datetime.strptime(end_date_str, '%Y-%m-%d')
+            except ValueError:
+                return jsonify({"error": "Invalid date format. Use YYYY-MM-DD."}), 400
+
+        # Fetch or calculate relevant data for the calendar view within the range
+        classes = selectWeekClasses(start_of_week, end_of_week)
+
+        return render_template(
+            'calendar.html',
+            classes=classes,
+            start_date=start_of_week.strftime('%Y-%m-%d'),
+            end_date=end_of_week.strftime('%Y-%m-%d')
+        )
+
 
 
 @calendar.route('/enroll', methods=['GET', 'POST'])  # TODO:Check for max capacity.
