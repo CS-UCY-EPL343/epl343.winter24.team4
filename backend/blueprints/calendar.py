@@ -8,7 +8,7 @@ from flask import Blueprint, request, render_template, jsonify
 calendar = Blueprint('calendar', __name__)
 
 @calendar.route('/calendar', methods=['GET', 'POST'])
-def calendar():
+def calendarRender():
     if request.method == 'GET':
         # Check for query parameters for start and end dates (optional)
         start_date_str = request.args.get('start_date')
