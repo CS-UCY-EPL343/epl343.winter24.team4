@@ -45,8 +45,9 @@ def login():
                 # Check if the password matches
                 if check_password(password, stored_password):
                     # Save the user in the session
-                    session['user_id'] = user[0].get('id')  # Assuming 'id' is the user identifier
-                    return jsonify({"message": "Login successful", "user": user[0]}), 200
+                    session['user_id'] = user[0].get('User_ID')  # Assuming 'id' is the user identifier
+                    session['isAdmin'] = user[0].get('isAdmin') 
+                    return redirect(url_for('main.home')), 200
                 else:
                     return jsonify({"message": "Invalid email or password"}), 401
             else:
@@ -56,7 +57,7 @@ def login():
 
     elif request.method == 'GET':
         if 'user_id' in session:  # Check if the user is already logged in
-            return redirect(url_for('main.dashboard'))  # Redirect to a dashboard or user page
+            return redirect(url_for('main.home'))  # Redirect to a dashboard or user page
         return render_template('/login.html')
 
 
