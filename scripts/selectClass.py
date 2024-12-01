@@ -70,12 +70,31 @@ def SelectUsersOfClass(time_start=None, date=None, class_id=None):
 
 def selectWeekClasses(start_date,end_date):
     query=  """
-            Select 
-                *
+           SELECT 
+                Class.Class_ID,
+                Class.Date,
+                Class.Time_start,
+                Class.Time_end,
+                Class.Max_capacity,
+                Class.Price,
+                Exercise_Type.Name AS Exercise_Type,
+                (Class.Max_capacity - COALESCE(COUNT(Enrollment.User_ID), 0)) AS Remaining_Capacity
             FROM 
                 Class
-            WHERE
-                class.Date BETWEEN :start_date AND :end_date;
+            JOIN 
+                Exercise_Type ON Class.Ex_ID = Exercise_Type.Ex_ID
+            LEFT JOIN 
+                Enrollment ON Class.Class_ID = Enrollment.Class_ID
+            WHERE 
+                Class.Date BETWEEN :start_date AND :end_date
+            GROUP BY 
+                Class.Class_ID, 
+                Class.Date, 
+                Class.Time_start, 
+                Class.Time_end, 
+                Class.Max_capacity, 
+                Class.Price, 
+                Exercise_Type.Name
             """
     params = {"start_date": start_date, "end_date": end_date}
     return execute_query_dict(query, params)
