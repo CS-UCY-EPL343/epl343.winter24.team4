@@ -1,0 +1,83 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<script src="../static/admin-class.js"></script>
+<link rel="stylesheet" href="../static/admin-class.css">
+<body>
+  <div class="calendar">
+
+    <h1 id="week-dates">25/11 - 01/12</h1>
+
+    <div class="day">
+      <span>Monday</span>
+      <span class="arrow">▼</span>
+      <div class="dropdown-content">
+        <p>Here are additional options for Monday.</p>
+        <div class="class-container" id="monday-classes">
+          <!-- Classes will dynamically appear here -->
+        </div>
+        <button class="add-class" data-day="monday">Add Class</button>
+      </div>
+    </div>
+
+    <div class="day">
+      <span>Tuesday</span>
+      <span class="arrow">▼</span>
+      <div class="dropdown-content">
+        <p>Here are additional options for Tuesday.</p>
+        <div class="class-container" id="tuesday-classes">
+          <!-- Classes will dynamically appear here -->
+        </div>
+        <button class="add-class" data-day="tuesday">Add Class</button>
+      </div>
+    </div>
+
+    <div class="day">
+      <span>Wednesday</span>
+      <span class="arrow">▼</span>
+      <div class="dropdown-content">
+        <p>Here are additional options for Wednesday.</p>
+        <div class="class-container" id="wednesday-classes"></div>
+        <button class="add-class" data-day="wednesday">Add Class</button>
+      </div>
+    </div>
+
+    <div class="day">
+      <span>Thursday</span>
+      <span class="arrow">▼</span>
+      <div class="dropdown-content">
+        <p>Here are additional options for Thursday.</p>
+        <div class="class-container" id="thursday-classes"></div>
+        <button class="add-class" data-day="thursday">Add Class</button>
+      </div>
+    </div>
+
+    <div class="day">
+      <span>Friday</span>
+      <span class="arrow">▼</span>
+        <div class="dropdown-content">
+          <p>Here are additional options for Friday.</p>
+          <div class="class-container" id="friday-classes"></div>
+          <button class="add-class" data-day="friday">Add Class</button>
+        </div>
+    </div>
+
+      <div class="day">
+        <span>Saturday</span>
+        <span class="arrow">▼</span>
+        <div class="dropdown-content">
+          <p>Here are additional options for Saturday.</p>
+          <div class="class-container" id="saturday-classes"></div>
+          <button class="add-class" data-day="saturday">Add Class</button>
+        </div>
+      </div>
+
+      <div class="week-navigation">
+        <button class="prev-week">Previous Week</button>
+        <button class="next-week">Next Week</button>
+      </div>
+  </div>
+</body>
+{% endblock %}
+
+
