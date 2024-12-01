@@ -47,7 +47,7 @@ def login():
                     # Save the user in the session
                     session['user_id'] = user[0].get('User_ID')  # Assuming 'id' is the user identifier
                     session['isAdmin'] = user[0].get('isAdmin') 
-                    return redirect(url_for('main.home')), 200
+                    return redirect(url_for('main.home'))
                 else:
                     return jsonify({"message": "Invalid email or password"}), 401
             else:
