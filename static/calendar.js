@@ -8,6 +8,14 @@ window.onload = function() {
             date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
         date.setDate(date.getDate() + 1);
     }
+
+    document.getElementById('left-arrow').addEventListener('click', function() {
+        console.log('Left arrow clicked');
+    });
+
+    document.getElementById('right-arrow').addEventListener('click', function() {
+        console.log('Right arrow clicked');
+    });
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -21,14 +29,17 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(dayColumnId);
 
         if (dayColumnId) {
-            addClassBox(dayColumnId)
-            const classBox = document.querySelector(`#${dayColumnId} .class-box`);
+            const classBox = addClassBox(dayColumnId)
             classBox.id = classItem.Class_ID;
             classBox.innerHTML = `
+                <p><strong>${classItem.Exercise_Type}</strong></p>
                 <p>${classItem.Time_start} - ${classItem.Time_end}</p>
-                <p>Price: $${classItem.Price}</p>
-                <p>Capacity: ${classItem.Max_capacity}</p>
+                <p>Price: €${classItem.Price}</p>
+                <p>Capacity: ${classItem.Remaining_Capacity}</p>
             `;
+            if(classItem.Remaining_Capacity === 0){
+                classBox.style.backgroundColor = "#999999";
+            }
             classBox.addEventListener('click', function() {
                 console.log(`Class-box with id "${classBox.id}" clicked!`);
     });
@@ -46,6 +57,8 @@ function addClassBox(day) {
     classBox.classList.add('class-box');
 
     parentDiv.appendChild(classBox);
+
+    return classBox;
 }
 
 function getMondayThisWeek() {
@@ -72,5 +85,7 @@ function thisWeekClasses(startDate, endDate) {
             return response.json();
         });
 }
+
+
 
 

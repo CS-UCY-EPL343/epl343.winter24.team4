@@ -55,3 +55,21 @@
             text-align: center;
             color: black;
         }
+
+        .side-image {
+            position: absolute; /* Absolute positioning within the wrapper */
+            top: 50%; /* Centering vertically */
+            transform: translateY(-25%); /* Adjusting for exact centering */
+            width: 80px; /* Adjust size */
+            height: auto;
+        }
+
+        /* Left image styles */
+        .left {
+            left: 120px; /* Adjust as needed */
+        }
+
+        /* Right image styles */
+        .right {
+            right: 120px; /* Adjust as needed */
+        }
