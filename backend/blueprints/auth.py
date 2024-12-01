@@ -29,6 +29,13 @@ def validate_password(password):
         return "Password must contain at least one special character."
     return None
 
+def is_admin():
+    if('isAdmin' not in session or not session.get('isAdmin')):
+        return False
+    else: 
+        return True
+        
+        
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
