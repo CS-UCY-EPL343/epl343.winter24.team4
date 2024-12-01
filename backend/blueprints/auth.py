@@ -1,8 +1,7 @@
-from flask import session, url_for
+from flask import Blueprint, redirect, request, render_template, jsonify, session, url_for
 from scripts.user.addNewUser import AddNewUserToDb
 import bcrypt
 import re
-from flask import Blueprint, redirect, request, render_template, jsonify
 
 
 from scripts.user.checkUserCredentials import checkUserCredentials
@@ -33,8 +32,8 @@ def validate_password(password):
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('Email')
-        password = request.form.get('Password')
+        email = request.form.get('email')
+        password = request.form.get('password')
 
         # Check if the user exists
         user = checkUserCredentials(email)
