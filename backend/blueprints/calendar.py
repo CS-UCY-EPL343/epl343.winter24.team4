@@ -24,6 +24,7 @@ def calendarRender():
             try:
                 start_of_week = datetime.strptime(start_date_str, '%Y-%m-%d')
                 end_of_week = datetime.strptime(end_date_str, '%Y-%m-%d')
+                return jsonify(classes = selectWeekClasses(start_of_week, end_of_week))
             except ValueError:
                 return jsonify({"error": "Invalid date format. Use YYYY-MM-DD."}), 400
 
