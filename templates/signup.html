@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Registration Form</title>
+    <link rel="stylesheet" href="/static/signUp.css">
+    <script src="/static/signUp.js" defer></script>
 </head>
 <body>
 
     <h2>User Registration</h2>
 
-    <form action="/signup" method="POST">
+    <form id="registrationForm" action="/signup" method="POST">
         <label for="FName">First Name:</label>
         <input type="text" id="FName" name="FName" required><br><br>
 
@@ -22,14 +24,26 @@
         <label for="Password">Password:</label>
         <input type="password" id="Password" name="Password" required><br><br>
 
+        <label for="ConfirmPassword">Confirm Password:</label>
+        <input type="password" id="ConfirmPassword" name="ConfirmPassword" required><br>
+        <span id="passwordMatchError" class="error-message"></span><br><br>
+
+        <!-- Password Error Box for Criteria -->
+        <div id="passwordErrorBox" class="error-box" style="display: none;">
+            <strong>Password must meet the following criteria:</strong>
+            <ul id="passwordErrorList"></ul>
+        </div><br>
+
         <label for="Birthday">Birthday:</label>
         <input type="date" id="Birthday" name="Birthday"><br><br>
 
         <label for="Phone">Phone:</label>
         <input type="text" id="Phone" name="Phone"><br><br>
 
-        <button type="submit">Submit</button>
+        <div class="button-container">
+            <button type="submit" class="submit-button" id="submitButton" disabled>Submit</button>
+            <button type="button" class="cancel-button" onclick="history.back()">Cancel</button>
+        </div>
     </form>
-
 </body>
 </html>
