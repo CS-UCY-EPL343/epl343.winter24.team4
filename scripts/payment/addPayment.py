@@ -6,7 +6,7 @@ from database import execute_query
 def addPayment(userid, class_id, payment_type):
     query = """
     INSERT INTO Payment  (User_ID, Class_ID, Payment_Type_ID)
-    VALUES (:amount, :userid, :payment_type);
+    VALUES (:userid, :class_id, :payment_type);
     """
     params = {
         "class_id": class_id,

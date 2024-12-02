@@ -173,7 +173,7 @@
     <script>
         let clients = [];
         let paymentOptions = [];
-
+    
         async function fetchClients() {
             try {
                 const response = await fetch('/api/getAllUsers'); // Adjust to your API endpoint
@@ -182,13 +182,13 @@
                 }
                 const data = await response.json();
                 clients = data.users;
-
+    
                 renderClients(clients);
             } catch (error) {
                 console.error("Error fetching clients:", error);
             }
         }
-
+    
         async function fetchPaymentOptions() {
             try {
                 const response = await fetch('/api/fetchPaymentType'); // Adjust to your API endpoint
@@ -201,7 +201,7 @@
                 console.error("Error fetching payment options:", error);
             }
         }
-
+    
         function renderClients(clientData) {
             const clientList = document.getElementById('clientRecords');
             clientList.innerHTML = '';
@@ -218,7 +218,7 @@
                 clientList.appendChild(clientItem);
             });
         }
-
+    
         function filterClients() {
             const query = document.getElementById("searchInput").value.toLowerCase();
             const filteredClients = clients.filter(client =>
@@ -226,45 +226,45 @@
             );
             renderClients(filteredClients);
         }
-
+    
         async function showClientDetails(client) {
             document.getElementById("memberName").textContent = client.FName;
             document.getElementById("memberSurname").textContent = client.LName;
-
+    
             document.getElementById("clientRecords").style.display = "none";
             document.getElementById("clientDetails").style.display = "block";
             document.getElementById("searchInput").style.display = "none";
-
+    
             try {
                 const response = await fetch(`http://127.0.0.1:5000/api/getUsersClasses?user_id=${client.User_id}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const classData = await response.json();
-                renderClassDetails(classData);
+                renderClassDetails(client.User_id, classData);
             } catch (error) {
                 console.error("Error fetching class data:", error);
             }
         }
-
-        function renderClassDetails(classes) {
+    
+        function renderClassDetails(userId, classes) {
             const classTableBody = document.querySelector("#classTable tbody");
             classTableBody.innerHTML = '';
-
+    
             const groupedClasses = classes.reduce((acc, cls) => {
                 const month = new Date(cls.Class_Date).toLocaleString('default', { month: 'long', year: 'numeric' });
                 if (!acc[month]) acc[month] = [];
                 acc[month].push(cls);
                 return acc;
             }, {});
-
+    
             for (const [month, monthClasses] of Object.entries(groupedClasses)) {
                 const monthHeaderRow = document.createElement("tr");
                 monthHeaderRow.innerHTML = `
                     <td colspan="6" class="month-header">${month}</td>
                 `;
                 classTableBody.appendChild(monthHeaderRow);
-
+    
                 monthClasses.forEach((cls, index) => {
                     const row = document.createElement("tr");
                     row.innerHTML = `
@@ -277,10 +277,10 @@
                             ${
                                 cls.Payment_Status === "Not Paid"
                                     ? `
-                                        <select class="pay-dropdown">
+                                        <select id="paymentType-${index}" class="pay-dropdown">
                                             ${paymentOptions.map(option => `<option value="${option.id}">${option.name}</option>`).join("")}
                                         </select>
-                                        <button class="pay-button" onclick="markAsPaid(${index})">Pay</button>
+                                        <button class="pay-button" onclick="markAsPaid(${userId}, ${cls.Class_ID}, ${index})">Pay</button>
                                     `
                                     : `<button class="pay-button" disabled>Paid</button>`
                             }
@@ -290,23 +290,56 @@
                 });
             }
         }
-
-        function markAsPaid(index) {
-            const statusCell = document.getElementById(`paymentStatus-${index}`);
-            statusCell.textContent = "Paid";
-            alert("Payment status updated to 'Paid'.");
+    
+        async function markAsPaid(userId, classId, index) {
+            const paymentTypeSelect = document.getElementById(`paymentType-${index}`);
+            const paymentType = paymentTypeSelect.value;
+    
+            try {
+                const response = await fetch('/api/insertPayment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        class_id: classId,
+                        payment_type: paymentType
+                    })
+                });
+    
+                if (response.ok) {
+                    const statusCell = document.getElementById(`paymentStatus-${index}`);
+                    statusCell.textContent = "Paid";
+    
+                    const payButton = paymentTypeSelect.nextElementSibling;
+                    payButton.disabled = true;
+                    payButton.textContent = "Paid";
+                    payButton.style.backgroundColor = "#cccccc";
+                    payButton.style.cursor = "not-allowed";
+    
+                    alert("Payment recorded successfully.");
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error: ${errorData.error || "Failed to process payment"}`);
+                }
+            } catch (error) {
+                console.error("Error processing payment:", error);
+                alert("An error occurred while processing the payment.");
+            }
         }
-
+    
         function goBack() {
             document.getElementById("clientRecords").style.display = "flex";
             document.getElementById("clientDetails").style.display = "none";
             document.getElementById("searchInput").style.display = "block";
         }
-
+    
         // Fetch clients and payment options on page load
         fetchClients();
         fetchPaymentOptions();
     </script>
+    
 </body>
 </html>
 {% endblock %}
