@@ -9,10 +9,15 @@ window.onload = function() {
     formattedSunday = formatDate(sunday);
 
 
-    const data = thisWeekClasses(formattedMonday, formattedSunday);
+    thisWeekClasses(formattedMonday, formattedSunday)
+            .then(data => {
+                console.log('Classes this week:', data);
+            })
+            .catch(error => {
+                console.error('Error fetching classes:', error);
+            });
 
     populateWeekDates(monday);
-    populateClasses(data);
 
     document.getElementById('left-arrow').addEventListener('click', function() {
         console.log('Left arrow clicked');
@@ -49,7 +54,7 @@ function populateWeekDates(date){
 function populateClasses(data){
     const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 
-    data.forEach(classItem => {
+    data.classes.forEach(classItem => {
         const classDate = new Date(classItem.Date);
         const dayColumnId = days[classDate.getDay()];
         console.log(dayColumnId);
@@ -63,11 +68,14 @@ function populateClasses(data){
                 <p>Price: €${classItem.Price}</p>
                 <p>Capacity: ${classItem.Remaining_Capacity}</p>
             `;
-            if(classItem.Remaining_Capacity === 0){
+            const today = new Date();
+            formattedToday = formatDate(today);
+            const classDate = formatDate(new Date(classItem.Date));
+            if(classItem.Remaining_Capacity === 0 || classDate < formattedToday){
                 classBox.style.backgroundColor = "#999999";
             }
             classBox.addEventListener('click', function() {
-                console.log(`Class-box with id "${classBox.id}" clicked!`);
+            console.log(`Class-box with id "${classBox.id}" clicked!`);
     });
         } else {
             console.error(`Column not found for day: ${dayColumnId}`);
@@ -102,28 +110,38 @@ function getMondayThisWeek() {
 
 function thisWeekClasses(startDate, endDate) {
     const apiUrl = '/calendar';
-    console.log(startDate + 'startDate');
-    console.log(endDate + 'endDate');
+
     return fetch(`${apiUrl}?start_date=${startDate}&end_date=${endDate}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
+        })
+        .then(data => {
+            console.log('Data received:', data);
+            populateClasses(data);
+        })
+        .catch(error => {
+            console.error('Error fetching week classes:', error);
         });
 }
+
 
 function getNextWeekFromCurrent(currentMonday) {
     const nextMonday = new Date(currentMonday);
     nextMonday.setDate(nextMonday.getDate() + 7);
+
     const nextSunday = new Date(nextMonday);
     nextSunday.setDate(nextSunday.getDate() + 6);
 
     populateWeekDates(new Date(nextMonday));
-    data = thisWeekClasses(nextMonday.getFullYear() + "-" + (nextMonday.getMonth()+1) + "-" + nextMonday.getDate(), nextSunday.getFullYear() + "-" + (nextSunday.getMonth()+1) + "-" + nextSunday.getDate());
-    console.log('Classes this week:', data);
-    populateClasses(data);
 
+    formattedMonday = formatDate(nextMonday);
+    formattedSunday = formatDate(nextSunday);
+
+    clearClassBoxes();
+    data = thisWeekClasses(formattedMonday, formattedSunday);
 }
 
 function getLastWeekFromCurrent(currentMonday) {
@@ -135,11 +153,19 @@ function getLastWeekFromCurrent(currentMonday) {
     lastSunday.setDate(lastMonday.getDate() + 6);
 
     populateWeekDates(new Date(lastMonday));
-    data = thisWeekClasses(lastMonday.getFullYear() + "-" + (lastMonday.getMonth()+1) + "-" + lastMonday.getDate(), lastSunday.getFullYear() + "-" + (lastSunday.getMonth()+1) + "-" + lastSunday.getDate());
-    console.log('Classes this week:', data);
-    populateClasses(data);
 
+    formattedMonday = formatDate(lastMonday);
+    formattedSunday = formatDate(lastSunday);
+
+    clearClassBoxes();
+    thisWeekClasses(formattedMonday, formattedSunday);
 }
+
+function clearClassBoxes() {
+    const classBoxes = document.querySelectorAll('.class-box');
+    classBoxes.forEach(box => box.remove());
+}
+
 
 
 
