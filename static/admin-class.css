@@ -9,6 +9,7 @@ body {
 .calendar {
     padding: 20px;
     margin-top: 150px;
+    background: rgba(105, 105, 105, 0.614);
 }
 
 .day {
@@ -59,7 +60,6 @@ color: rgb(171, 252, 41);
     padding: 8px; /* No padding when closed */
     border-top: none;
     margin-top: 15px;
-    background: #ffffff4a;
     position: relative;
     width: 100%;
     transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
@@ -83,7 +83,7 @@ color: rgb(171, 252, 41);
 }
 
 .week-navigation button {
-    background-color: #4e4e4e;
+    background-color: #171717;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -101,15 +101,26 @@ color: rgb(171, 252, 41);
     flex-grow: 1; /* Ensures the date header takes up available space */
     text-align: center; /* Centers the week dates */
 }
-.add-class-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-    background-color: #f4f4f426;
-    padding: 10px;
-    border-radius: 5px;
+
+.add-class-form select {
+    padding: 8px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    background-color: rgb(0, 0, 0);
+    color: #ffffff; /* Text color is white */
 }
+
+.add-class-form {
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Add smooth transition */
+    opacity: 1; /* Default state */
+    transform: scale(1); /* Default state */
+}
+
+.add-class-form.removing {
+    opacity: 0; /* Fade out */
+    transform: scale(0.9); /* Shrink slightly */
+}
+
 
 .add-class-form input {
     padding: 8px;
@@ -121,23 +132,14 @@ color: rgb(171, 252, 41);
 
 .add-class-form button {
     border: none;
-    padding: 5px;
-    background-color: rgb(74, 74, 74);
+    padding: 8px;
+    background-color: rgb(35, 35, 35);
     color: white;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
 .add-class-form button:hover {
-    color: rgb(171, 252, 41);
-}
-
-.add-class {
-    border: none;
-    padding: 5px;
-    background-color: rgb(26, 26, 26);
-    color: white;
-}
-
-.add-class:hover {
     color: rgb(171, 252, 41);
 }
 
@@ -149,15 +151,137 @@ color: rgb(171, 252, 41);
     display: flex;
     flex-direction: column;
     gap: 5px;
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Add transition for smooth removal */
+    opacity: 1; /* Default state */
+    transform: scale(1); /* Default state */
 }
 
-.Remove {
+.class-item.removing {
+    opacity: 0; /* Fade out */
+    transform: scale(0.9); /* Slight shrink */
+}
+
+
+.remove-class {
     border: none;
     padding: 5px;
-    background-color: rgb(74, 74, 74);
+    background-color: rgb(50, 50, 50);
     color: white;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
-.Remove:hover {
+.remove-class:hover {
     color: rgb(171, 252, 41);
 }
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #000000;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Could be more or less, depending on screen size */
+    border-radius: 10px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.add-class, .view-students {
+    margin-top: 5px;
+    border: none;
+    padding: 8px;
+    background-color: rgb(26, 26, 26);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-class:hover, .view-students:hover {
+    color: rgb(171, 252, 41);
+}
+
+/* Form container styling for layout */
+.student-form-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/* Add button styling */
+.add {
+    border: none;
+    padding: 5px;
+    background-color: rgb(0, 0, 0);
+    color: white;
+    cursor: pointer;
+}
+
+.add:hover {
+    color: rgb(171, 252, 41);
+}
+
+.remove-student {
+    border: none;
+    padding: 5px;
+    background-color: black;
+    color: rgb(255, 255, 255);
+    cursor: pointer; /* Ensure it looks clickable */
+}
+
+.remove-student:hover {
+    color: rgb(171, 252, 41);
+}
+
+.view-students {
+    border: none;
+    padding: 5px;
+    background-color: rgb(26, 26, 26);
+    color: white;
+    cursor: pointer; /* Makes the cursor a pointer */
+}
+
+.view-students:hover {
+    color: rgb(171, 252, 41);
+}
+
+.close {
+    color: white; /* Default color */
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    border: none;
+    background: none; /* Remove any background */
+    cursor: pointer; /* Make it look clickable */
+}
+
+.close:hover,
+.close:focus {
+    color: rgb(171, 252, 41); /* Change to greenish color on hover */
+    text-decoration: none; /* Ensure no underline */
+}
+
