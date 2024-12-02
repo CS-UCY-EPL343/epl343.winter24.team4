@@ -1,5 +1,7 @@
 from database import *
 from database import execute_query
+from database import execute_query_dict
+
 
 def getAllUsers():
     query = """
@@ -7,11 +9,10 @@ def getAllUsers():
     FROM USERS
     """
 
-    return execute_query(query)
+    return execute_query_dict(query)
 
-from database import execute_query_dict
 
-def getUserClassesForMonth(user_identifier, month):
+def getUserClassesForMonth(user_identifier):
     """
     Fetches the classes for a specific user and month.
 
@@ -24,30 +25,30 @@ def getUserClassesForMonth(user_identifier, month):
     """
     query = """
     SELECT 
-        c.Date,
+        c.Class_ID,
+        c.Date AS Class_Date,
         c.Time_start,
         c.Time_end,
-        c.Class_ID,
-        c.Price
+        c.Price,
+        CASE 
+            WHEN p.Payment_ID IS NOT NULL THEN 'Paid'
+            ELSE 'Not Paid'
+        END AS Payment_Status
     FROM 
         Enrollment e
-    INNER JOIN 
+    JOIN 
         Class c ON e.Class_ID = c.Class_ID
-    INNER JOIN 
-        Users u ON e.User_ID = u.User_ID
+    LEFT JOIN 
+        Payment p ON e.User_ID = p.User_ID AND e.Class_ID = p.Class_ID
     WHERE 
-        (u.User_ID = :userid OR u.FName + ' ' + u.LName = :username)
-        AND FORMAT(c.Date, 'yyyy-MM') = :month
-    ORDER BY 
-        c.Date, c.Time_start;
+        e.User_ID = :userid; 
+
     """
 
     # Prepare parameters based on input type
     params = {
-        "userid": user_identifier if isinstance(user_identifier, int) else None,
-        "username": user_identifier if isinstance(user_identifier, str) else None,
-        "month": month
+        "userid": user_identifier
     }
 
     # Execute query
-    result = execute_query_dict(query, params)
+    return execute_query_dict(query, params)

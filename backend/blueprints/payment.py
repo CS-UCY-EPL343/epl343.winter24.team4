@@ -12,7 +12,6 @@ def makePayment():
 
 @payment.route('/payments', methods=['GET','POST'])
 def payments():
-     
-
     if(request.method == 'GET'):
         return render_template('payments.html')
+
