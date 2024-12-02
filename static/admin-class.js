@@ -36,11 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     prevWeekButton.addEventListener('click', () => {
         currentStartDate.setDate(currentStartDate.getDate() - 7);
+        clearClassBoxes();
         updateWeekDisplay();
     });
 
     nextWeekButton.addEventListener('click', () => {
         currentStartDate.setDate(currentStartDate.getDate() + 7);
+        clearClassBoxes();
         updateWeekDisplay();
     });
 
@@ -67,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         form.innerHTML = `
             <input type="text" placeholder="Class Hours (e.g., 10:00 - 11:00)" required class="class-hours">
             <input type="text" placeholder="Description" required class="class-description">
-            <select required class="class-type">
+            <select class="class-type">
                 <option value="" disabled selected>Select Class Type</option>
                 <option value="Yoga">Yoga</option>
                 <option value="Dance">Dance</option>
@@ -195,3 +197,88 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+function clearClassBoxes() {
+    const classBoxes = document.querySelectorAll('.class-item');
+    classBoxes.forEach(box => box.remove());
+}
+
+function thisWeekClasses(startDate, endDate) {
+    const apiUrl = '/admin/class';
+
+    return fetch(`${apiUrl}?start_date=${startDate}&end_date=${endDate}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Data received:', data);
+            populateClasses(data);
+        })
+        .catch(error => {
+            console.error('Error fetching week classes:', error);
+        });
+}
+
+function populateClasses(data) {
+    // Clear existing classes before populating
+    document.querySelectorAll('.day .class-item').forEach(item => item.remove());
+
+    // Iterate through the days in the data
+    data.forEach(dayData => {
+        const dayContainer = document.getElementById(`${dayData.day}-classes`);
+        
+        // Add each class to the corresponding day
+        dayData.classes.forEach(classInfo => {
+            const classItem = document.createElement('div');
+            classItem.classList.add('class-item');
+            
+            // Create unique ID for student list
+            const studentListId = `student-list-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            
+            classItem.innerHTML = `
+                <p>Hours: ${classInfo.hours}</p>
+                <p>Description: ${classInfo.description}</p>
+                <p>Class Type: ${classInfo.type}</p>
+                <p>Capacity: ${classInfo.capacity}</p>
+                <button class="remove-class">Remove</button>
+                <button class="view-students" data-student-list="${studentListId}">View Students</button>
+                <div id="${studentListId}" class="student-list" style="display: none;"></div>
+            `;
+
+            // Add logic for removing classes
+            classItem.querySelector('.remove-class').addEventListener('click', () => {
+                classItem.remove();
+                adjustDropdownHeight(dayContainer.closest('.dropdown-content'));
+            });
+
+            // Add logic for viewing students
+            classItem.querySelector('.view-students').addEventListener('click', (event) => {
+                const studentList = document.getElementById(event.target.getAttribute('data-student-list'));
+                const modal = document.getElementById('view-students-modal');
+                modal.style.display = 'block';
+
+                const modalStudentList = document.getElementById('student-list');
+                modalStudentList.innerHTML = studentList.innerHTML;
+
+                // Attach event for removing students
+                modalStudentList.querySelectorAll('.remove-student').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const studentElement = button.parentElement;
+                        studentElement.remove();
+                        const matchingStudent = [...studentList.children].find(child => child.textContent.trim() === studentElement.textContent.trim());
+                        if (matchingStudent) matchingStudent.remove();
+                    });
+                });
+            });
+
+            // Append class item to the container
+            dayContainer.appendChild(classItem);
+        });
+
+        // Adjust dropdown height for proper UI display
+        adjustDropdownHeight(dayContainer.closest('.dropdown-content'));
+    });
+}
