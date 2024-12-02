@@ -16,7 +16,7 @@ def admin_class():
         
 
 @admin.route('/admin/admin-payments', methods=['GET', 'POST'])
-def admin_class():
+def admin_payments():
     if request.method == 'GET':
         if(is_admin()):
             return render_template("admin-payments.html")
