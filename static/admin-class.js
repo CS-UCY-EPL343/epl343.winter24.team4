@@ -58,6 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize week display
     updateWeekDisplay();
 
+    // Function to dynamically adjust dropdown height
+    function adjustDropdownHeight(dropdown) {
+        if (dropdown.classList.contains('show')) {
+            dropdown.style.maxHeight = `${dropdown.scrollHeight}px`;
+        } else {
+            dropdown.style.maxHeight = "0"; // Reset height when hidden
+        }
+    }
+
     // Add dropdown functionality for each arrow
     document.querySelectorAll('.arrow').forEach(arrow => {
         arrow.addEventListener('click', function () {
@@ -65,29 +74,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const dropdown = day.querySelector('.dropdown-content');
             const allDropdowns = document.querySelectorAll('.dropdown-content');
             const allArrows = document.querySelectorAll('.arrow');
-            const allDays = document.querySelectorAll('.day');
 
             // Close all dropdowns and reset all arrows
             allDropdowns.forEach(d => {
-                if (d !== dropdown) d.classList.remove('show');
+                if (d !== dropdown) {
+                    d.classList.remove('show');
+                    d.style.maxHeight = "0"; // Reset height
+                }
             });
 
             allArrows.forEach(a => {
                 if (a !== this) a.classList.remove('rotate');
             });
 
-            // Remove active state from all days
-            allDays.forEach(d => d.classList.remove('active'));
-
             // Toggle the current dropdown, arrow, and active day
             dropdown.classList.toggle('show');
             this.classList.toggle('rotate');
-
-            if (dropdown.classList.contains('show')) {
-                day.classList.add('active');
-            } else {
-                day.classList.remove('active');
-            }
 
             // Dynamically adjust the dropdown height
             adjustDropdownHeight(dropdown);
@@ -154,15 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Adjust dropdown height dynamically
         adjustDropdownHeight(container.closest('.dropdown-content'));
-    }
-
-    // Function to dynamically adjust dropdown height
-    function adjustDropdownHeight(dropdown) {
-        if (dropdown.classList.contains('show')) {
-            dropdown.style.maxHeight = `${dropdown.scrollHeight}px`;
-        } else {
-            dropdown.style.maxHeight = "0";
-        }
     }
 
     // Add event listeners to all "Add Class" buttons

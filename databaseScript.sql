@@ -51,6 +51,7 @@ CREATE TABLE Payment (
     [Payment_Datetime] DATETIME NOT NULL DEFAULT GETDATE(),
     [User_ID] INT NOT NULL,
     [Payment_Type_ID] INT NOT NULL,
+    [Class_ID] INT NOT NULL,
     CONSTRAINT [PK_Payment] PRIMARY KEY ([Payment_ID])
 );
 
@@ -64,4 +65,5 @@ CONSTRAINT [FK_Enrollment_Users] FOREIGN KEY ([User_ID]) REFERENCES [Users]([Use
 
 ALTER TABLE Payment
 ADD CONSTRAINT [FK_Payment_Users] FOREIGN KEY ([User_ID]) REFERENCES [Users]([User_ID]),
-CONSTRAINT [FK_Payment_Payment_Type] FOREIGN KEY ([Payment_Type_ID]) REFERENCES [Payment_Type]([Payment_Type_ID]);
+CONSTRAINT [FK_Payment_Payment_Type] FOREIGN KEY ([Payment_Type_ID]) REFERENCES [Payment_Type]([Payment_Type_ID]),
+CONSTRAINT [FK_Payment_Class] FOREIGN KEY ([Class_ID]) REFERENCES [Class]([Class_ID])
