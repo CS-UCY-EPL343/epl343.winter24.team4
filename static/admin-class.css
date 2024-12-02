@@ -8,16 +8,18 @@ body {
 
 .calendar {
     padding: 20px;
+    margin-top: 150px;
 }
 
 .day {
     border-top: 1px solid #ccc;
     padding: 15px 0;
-    display: flex;
+    display: block;
     justify-content: space-between;
     align-items: center;
-    display: block;
-    
+    margin-right: 1000px;
+    width: 100%;
+    position: relative;
 }
 
 .day:first-of-type {
@@ -28,17 +30,22 @@ body {
     display: inline-block;
     font-size: 18px;
     font-weight: bold;
+    margin-right: auto;
 }
 
 .arrow {
     background: none;
-    position: fixed;
-    right: 30px;
     border: none;
     font-size: 20px;
     cursor: pointer;
-    transform: translateY(-50%);
+    position: absolute; /* Move it to a fixed position */
+    right: 10px;
+    transform: translateY(-50%); /* Vertically align it */
     transition: transform 0.2s;
+}
+
+.arrow:hover {
+color: rgb(171, 252, 41);
 }
 
 .arrow.rotate {
@@ -47,21 +54,22 @@ body {
 
 .dropdown-content {
     opacity: 0;
-    max-height: 0;
+    max-height: 0; /* Collapsed by default */
     overflow: hidden;
-    padding: 0;
-    border-top: 1px solid #ccc;
-    margin-top: 5px;
-    background: #ffffff;
+    padding: 8px; /* No padding when closed */
+    border-top: none;
+    margin-top: 15px;
+    background: #ffffff4a;
     position: relative;
     width: 100%;
     transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+    z-index: 10;
 }
 
 .dropdown-content.show {
     opacity: 1;
-    max-height: 1000px; /* Set a high enough value to accommodate added content */
-    padding: 10px; /* Add consistent padding */
+    margin-top: 10px;
+    padding: 2px;
 }
 
 .week-navigation {
@@ -75,7 +83,7 @@ body {
 }
 
 .week-navigation button {
-    background-color: #35573c;
+    background-color: #4e4e4e;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -86,7 +94,7 @@ body {
 }
 
 .week-navigation button:hover {
-    background-color: #347442;
+    color: rgb(171, 252, 41); /* Changes the text color to greenish */
 }
 
 #week-dates {
@@ -98,37 +106,58 @@ body {
     flex-direction: column;
     gap: 10px;
     margin-top: 10px;
-    background-color: #f4f4f4;
+    background-color: #f4f4f426;
     padding: 10px;
     border-radius: 5px;
 }
 
 .add-class-form input {
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #000000;
     border-radius: 4px;
+    background-color: rgb(0, 0, 0);
+    color: #ffffff; /* Text color is white */
 }
 
 .add-class-form button {
-    background-color: #35573c;
-    color: white;
     border: none;
-    padding: 8px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
+    padding: 5px;
+    background-color: rgb(74, 74, 74);
+    color: white;
 }
 
 .add-class-form button:hover {
-    background-color: #2a4a31;
+    color: rgb(171, 252, 41);
+}
+
+.add-class {
+    border: none;
+    padding: 5px;
+    background-color: rgb(26, 26, 26);
+    color: white;
+}
+
+.add-class:hover {
+    color: rgb(171, 252, 41);
 }
 
 .class-item {
-    background-color: #9DB9A6;
+    background-color: #242424;
     padding: 10px;
     margin: 10px 0;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
     gap: 5px;
+}
+
+.Remove {
+    border: none;
+    padding: 5px;
+    background-color: rgb(74, 74, 74);
+    color: white;
+}
+
+.Remove:hover {
+    color: rgb(171, 252, 41);
 }
