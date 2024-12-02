@@ -37,59 +37,20 @@ def calendarRender():
 
 
 
-@calendar.route('/enroll', methods=['GET', 'POST'])  # TODO:Check for max capacity.
-def register():
-    if(not 'user_id' in session):
-        return(redirect(url_for('main.home')))
-    if request.method == 'POST':
-        try:
-            user_id = request.form.get('user_id')
-            class_id = request.form.get('class_id')
-
-            success = AddEnrollment(class_id=class_id, user_id=4)  # TODO: MAKE IT DYNAMIC WITH THE LOGIN
-            if success:
-                return jsonify({"message": "Registration successful."}), 201
-            else:
-                return jsonify({"error": "Failed to register for class."}), 500
-        except Exception as e:
-            return jsonify({"error": f"An error occurred: {str(e)}"}), 500
-
-    if request.method == 'GET': 
-        try:
-            # Fetch all classes
-            classes_json = SelectAllClasses()
-            classes = json.loads(classes_json)
-
-            # Debug: Print all classes
-            print("Fetched Classes:", classes)
-
-            # Determine the start and end of the current week (Monday to Sunday)
-            today = datetime.today()
-            start_of_week = today - timedelta(days=today.weekday())  # Monday of the current week
-            end_of_week = start_of_week + timedelta(days=6)  # Sunday of the current week
-
-            # Debug: Print the week range
-            print("Week Range:", start_of_week.date(), "to", end_of_week.date())
-
-            # Group classes by day within the week
-            week_days = [
-                {
-                    "date": (start_of_week + timedelta(days=i)).strftime("%Y-%m-%d"),
-                    "classes": [
-                        c for c in classes
-                        if datetime.strptime(c['Date'], '%Y-%m-%d').date() == (start_of_week + timedelta(days=i)).date()
-                    ]
-                }
-                for i in range(7)
-            ]
-
-            # Debug: Print the week_days structure
-            print("Week Days:", week_days)
-
-            return render_template('/enroll.html', week_days=week_days, user_id=1)
-        except Exception as e:
-            print(f"Error: {e}")
-            return jsonify({"error": f"Error loading classes: {str(e)}"}), 500
+@calendar.route('/enroll', methods=['POST'])  
+def enroll():
+    if 'user_id' not in session:
+        return redirect(url_for('main.home'))
+    try:
+        user_id = session['user_id']
+        class_id = request.json.get('class_id') 
+        success = AddEnrollment(class_id, user_id)  
+        if success:
+            return jsonify({"message": "Registration successful."}), 201
+        else:
+            return jsonify({"error": "Failed to register for class."}), 500
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
 
 @calendar.route('/addClass', methods=['GET', 'POST'])  # TODO:NEEDS SOME CHECKS
