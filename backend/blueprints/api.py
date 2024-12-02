@@ -46,10 +46,9 @@ def insertPayment():
             user_id = session['user_id']
             class_id = data.get('class_id')
             payment_type = data.get('payment_type')
-            amount = data.get('amount')  # Ensure the amount is provided
 
             # Validate inputs
-            if not class_id or not payment_type or not amount:
+            if not class_id or not payment_type:
                 return jsonify({"error": "Missing required fields (class_id, payment_type, amount)"}), 400
 
             # Insert payment
