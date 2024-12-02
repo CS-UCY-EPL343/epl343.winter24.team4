@@ -1,11 +1,50 @@
 {% extends "navbar.html" %}
 
 {% block content %}
-<main>
-    <div class="box">
-        <div class="box-content">
-            <h1></h1>
-        </div>
+<link rel="stylesheet" href="../static/profile.css">
+<script src="../static/profile.js"></script>
+
+<body>
+  <div class="container">
+    <div class="menu">
+      <ul>
+        <li id="profile-info-tab" class="active">Profile Info</li>
+        <li id="change-password-tab">Change Password</li>
+        <li id="change-email-tab">Change Email</li>
+        <button id="logout-menu" onclick="window.location.href='/logout';">Logout</button>
+    </ul>
     </div>
-</main>
+    <div class="content">
+      <div id="profile-info" class="content-box">
+        <h2>Profile Information</h2>
+        <p>Welcome! Here is your profile information.</p>
+      </div>
+      <div id="change-password" class="content-box hidden">
+        <h2>Change Password</h2>
+        <form>
+          <label for="old-password">Old Password:</label>
+          <input type="password" id="old-password" required>
+          <label for="new-password">New Password:</label>
+          <input type="password" id="new-password" required>
+          <label for="confirm-password">Confirm Password:</label>
+          <input type="password" id="confirm-password" required>
+          <button type="submit">Update Password</button>
+        </form>
+      </div>
+      <div id="change-email" class="content-box hidden">
+        <h2>Change Email</h2>
+        <form>
+          <label for="new-email">New Email:</label>
+          <input type="email" id="new-email" required>
+          <label for="old-password">Password For Approval:</label>
+          <input type="password" id="old-password" required>
+          <button type="submit">Update Email</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+
+
 {% endblock %}
