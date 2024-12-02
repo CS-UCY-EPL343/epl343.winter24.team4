@@ -58,7 +58,7 @@ def calendarRender():
                 return jsonify({"error": "Invalid date format. Use YYYY-MM-DD."}), 400
             
 @admin.route('api/admin/class/insertClass', methods=['POST'])
-def calendarRender():
+def InsertClass():
     try:
         # Check if the method is POST
         if request.method == 'POST':
