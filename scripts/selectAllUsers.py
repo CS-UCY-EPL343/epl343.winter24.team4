@@ -52,3 +52,11 @@ def getUserClasses(user_identifier):
 
     # Execute query
     return execute_query_dict(query, params)
+
+def getUserData(userid):
+    query = """
+    SELECT 
+        SELECT  *
+        FROM USERS AS U
+        where U.User_ID=:userid
+    """
