@@ -223,7 +223,7 @@ function showModal(classItem) {
             console.error('Error enrolling in class:', error);
         });
     };
-}
+};
 
 function closeModal() {
     const modal = document.getElementById("enrollModal");

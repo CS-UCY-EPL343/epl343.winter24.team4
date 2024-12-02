@@ -9,8 +9,3 @@ def home():
                            )
 
 
-@main.route('/about', methods=['GET'])
-def about():
-    render_template('about.html')
-
-
