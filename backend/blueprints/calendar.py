@@ -11,7 +11,7 @@ calendar = Blueprint('calendar', __name__)
 def calendarRender():
     if request.method == 'GET':
         if(not 'user_id' in session):
-                return(redirect(url_for('main.home')))
+                return(redirect(url_for('auth.login')))
         # Check for query parameters for start and end dates (optional)
         start_date_str = request.args.get('start_date')
         end_date_str = request.args.get('end_date')

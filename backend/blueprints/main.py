@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template, session, redirect, url_for
 
 main = Blueprint('main', __name__)
 
@@ -10,6 +10,8 @@ def home():
 
 @main.route('/profile')
 def profile():
-    return render_template("profile.html")
+    if 'user_id' in session:
+        return render_template("profile.html")
+    else: redirect(url_for('main.home'))
 
 
