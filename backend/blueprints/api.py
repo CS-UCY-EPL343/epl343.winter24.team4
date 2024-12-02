@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, request, render_template, jsonify, sessio
 
 from scripts.payment.addPayment import addPayment
 from scripts.payment.selectPaymentTypes import PaymentTypes
-from scripts.selectAllUsers import getAllUsers,getUserClassesForMonth
+from scripts.selectAllUsers import getAllUsers,getUserClasses
 from scripts.user.addNewUser import AddNewUserToDb
 import bcrypt
 import re
@@ -69,3 +69,9 @@ def fetchPaymentType():
         return jsonify({"error": "You are not logged in"}), 401
     if session['isAdmin']:
         return jsonify(PaymentTypes())
+
+@api.route('/api/getCurrentUserClasses', methods=['GET'])
+def getCurrentUserClasses():
+    if not 'user_id' in session:
+            return jsonify({"error": "You are not logged in"})
+    return jsonify(getUserClasses(session['user_id']))
