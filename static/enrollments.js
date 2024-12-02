@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function fetchEnrollments() {
     const apiUrl = '/api/enrollments';
-    console.log(apiUrl);
     return fetch(apiUrl)
         .then(response => {
             if (!response.ok) {
@@ -52,12 +51,38 @@ function createEnrollmentCards(enrollments) {
             deleteEnrollmentButton.classList.add("enroll-btn");
             deleteEnrollmentButton.addEventListener("click", function () {
                 alert(`You have deleted your enrollment for class "${classItem.Name}"!`);
+                deleteEnrollment(classItem.Class_ID);
             });
 
             card.appendChild(deleteEnrollmentButton);
         }
 
         container.appendChild(card);
+    });
+}
+
+function deleteEnrollment(classId){
+    const data = { class_id: classId };
+    const apiUrl = '/api/deleteEnrollment';
+    return fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        else
+        {
+            location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting enrollment in class:', error);
+
     });
 }
 
