@@ -184,7 +184,7 @@ function showModal(classItem) {
     const modal = document.getElementById("enrollModal");
     const classDetails = document.getElementById("classDetails");
     const enrollBtn = document.getElementById("enrollBtn");
-    const closeBtn = document.getElementById("closeModal");  // Close button element
+    const closeBtn = document.getElementById("closeModal");  
 
     classDetails.innerHTML = `
         <strong>${classItem.Exercise_Type}</strong><br>
@@ -200,10 +200,30 @@ function showModal(classItem) {
     };
 
     enrollBtn.onclick = function() {
-        console.log(`Enrolling in class ${classItem.Class_ID}`);
-        closeModal();
+        const apiUrl = '/enroll';
+        const classId = classItem.Class_ID;
+        
+        const data = { class_id: classId };
+    
+        return fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',  
+            },
+            body: JSON.stringify(data)  
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            closeModal();
+            return response.json();    
+        })
+        .catch(error => {
+            console.error('Error enrolling in class:', error);
+        });
     };
-}
+};
 
 function closeModal() {
     const modal = document.getElementById("enrollModal");
