@@ -3,11 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevWeekButton = document.querySelector('.prev-week');
     const nextWeekButton = document.querySelector('.next-week');
 
-    function getStartOfWeek(date) {
-        const dayOfWeek = date.getDay();
-        const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-        const startOfWeek = new Date(date);
-        startOfWeek.setDate(date.getDate() + diff);
+    function getStartOfWeek() {
+        const today = new Date();
+        const dayOfWeek = today.getDay();
+        const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() + diffToMonday);
         return startOfWeek;
     }
 
@@ -19,29 +20,113 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${start.toLocaleDateString('en-GB', options)} - ${end.toLocaleDateString('en-GB', options)}`;
     }
 
-    let currentStartDate = getStartOfWeek(new Date());
+    const monday = getStartOfWeek();
+    const sunday = new Date(monday);
+    sunday.setDate(sunday.getDate() + 6);
 
+    function formatDate(date){
+        return date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+    }
+
+    formattedMonday = formatDate(monday);
+    formattedSunday = formatDate(sunday);
+
+    thisWeekClasses(formattedMonday, formattedSunday)
+            .then(data => {
+                console.log('Classes this week:', data);
+            })
+            .catch(error => {
+                console.error('Error fetching classes:', error);
+            });
+
+            function getNextWeekFromCurrent(currentMonday) {
+                const nextMonday = new Date(currentMonday);
+                nextMonday.setDate(nextMonday.getDate() + 7);
+            
+                const nextSunday = new Date(nextMonday);
+                nextSunday.setDate(nextSunday.getDate() + 6);
+            
+                populateWeekDates(new Date(nextMonday));
+            
+                formattedMonday = formatDate(nextMonday);
+                formattedSunday = formatDate(nextSunday);
+            
+                clearClassBoxes();
+                data = thisWeekClasses(formattedMonday, formattedSunday);
+            }
+            
+            function getLastWeekFromCurrent(currentMonday) {
+            
+                const lastMonday = new Date(currentMonday);
+                lastMonday.setDate(lastMonday.getDate() - 7);
+            
+                const lastSunday = new Date(lastMonday);
+                lastSunday.setDate(lastMonday.getDate() + 6);
+            
+                populateWeekDates(new Date(lastMonday));
+            
+                formattedMonday = formatDate(lastMonday);
+                formattedSunday = formatDate(lastSunday);
+            
+                clearClassBoxes();
+                thisWeekClasses(formattedMonday, formattedSunday);
+            } 
+            
+            prevWeekButton.addEventListener('click', () => {
+                monday.setDate(monday.getDate() - 7);
+                clearClassBoxes();
+                updateWeekDisplay();
+            });
+            
+            nextWeekButton.addEventListener('click', () => {
+                monday.setDate(monday.getDate() + 7);
+                clearClassBoxes();
+                updateWeekDisplay();
+            });
+            
+    
     function updateWeekDisplay() {
-        weekDatesElement.textContent = formatDateRange(currentStartDate);
+        weekDatesElement.textContent = formatDateRange(monday);
         const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         const allDays = document.querySelectorAll('.day');
+        populateWeekDates(monday);
         allDays.forEach((dayElement, index) => {
-            const dayDate = new Date(currentStartDate);
-            dayDate.setDate(currentStartDate.getDate() + index);
+            const dayDate = new Date(monday);
+            dayDate.setDate(monday.getDate() + index);
             const formattedDate = dayDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
             const dayLabel = `${daysOfWeek[index]} ${formattedDate.split('/').slice(0, 2).join('/')}`;
             dayElement.querySelector('span').textContent = dayLabel;
         });
     }
 
+    function populateWeekDates(startOfWeek) {
+        const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        const allDays = document.querySelectorAll('.day');
+    
+        allDays.forEach((dayElement, index) => {
+            const dayDate = new Date(startOfWeek);
+            dayDate.setDate(startOfWeek.getDate() + index);
+    
+            // Format the date for display (e.g., DD/MM/YYYY)
+            const formattedDate = dayDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    
+            // Update the day's text content
+            const dayLabel = `${daysOfWeek[index]} ${formattedDate.split('/').slice(0, 2).join('/')}`;
+            dayElement.querySelector('span').textContent = dayLabel;
+    
+            // Assign the date to the day's dataset for easy tracking
+            dayElement.dataset.date = dayDate.toISOString().split('T')[0];
+        });
+    }    
+
     prevWeekButton.addEventListener('click', () => {
-        currentStartDate.setDate(currentStartDate.getDate() - 7);
+        monday.setDate(monday.getDate() - 7);
         clearClassBoxes();
         updateWeekDisplay();
     });
 
     nextWeekButton.addEventListener('click', () => {
-        currentStartDate.setDate(currentStartDate.getDate() + 7);
+        monday.setDate(monday.getDate() + 7);
         clearClassBoxes();
         updateWeekDisplay();
     });
