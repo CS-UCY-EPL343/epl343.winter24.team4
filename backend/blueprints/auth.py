@@ -103,7 +103,7 @@ def signup():
 
     elif request.method == 'GET':
         if 'user_id' in session:
-            return redirect(url_for('main.dashboard'))  # Redirect to dashboard if already logged in
+            return redirect(url_for('main.home'))  # Redirect to dashboard if already logged in
         return render_template('/signup.html')
 
 

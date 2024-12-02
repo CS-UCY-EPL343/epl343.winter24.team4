@@ -142,3 +142,8 @@ def add_class():
 
         except Exception as e:
             return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+        
+
+@calendar.route('/enrollments',  methods=['GET', 'POST'])
+def enrollments():
+    return render_template('enrollments.html')
