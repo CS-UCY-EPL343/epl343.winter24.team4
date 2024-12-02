@@ -43,15 +43,19 @@ function createEnrollmentCards(enrollments) {
             <p><strong>Attendance:</strong> ${classItem.Attendance_Status ? "Attended" : "Not Attended"}</p>
         `;
         card.innerHTML = classInfo;
+        const today = new Date();
+        const classDate = new Date(classItem.Date);
+        if(classDate > today) {
+            console.log('IN BUTTON');
+            const deleteEnrollmentButton = document.createElement("button");
+            deleteEnrollmentButton.textContent = "Delete Enrollment";
+            deleteEnrollmentButton.classList.add("enroll-btn");
+            deleteEnrollmentButton.addEventListener("click", function () {
+                alert(`You have deleted your enrollment for class "${classItem.Name}"!`);
+            });
 
-        const deleteEnrollmentButton = document.createElement("button");
-        deleteEnrollmentButton.textContent = "Delete Enrollment";
-        deleteEnrollmentButton.classList.add("enroll-btn");
-        deleteEnrollmentButton.addEventListener("click", function () {
-            alert(`You have deleted your enrollment for class "${classItem.Name}"!`);
-        });
-
-        card.appendChild(deleteEnrollmentButton);
+            card.appendChild(deleteEnrollmentButton);
+        }
 
         container.appendChild(card);
     });
