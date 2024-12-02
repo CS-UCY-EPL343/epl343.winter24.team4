@@ -7,3 +7,10 @@ def home():
     return render_template("home.html",
                            logged_in = 'user_id' in session
                            )
+
+
+@main.route('/about', methods=['GET'])
+def about():
+    render_template('about.html')
+
+
