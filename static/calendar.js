@@ -184,8 +184,8 @@ function showModal(classItem) {
     const modal = document.getElementById("enrollModal");
     const classDetails = document.getElementById("classDetails");
     const enrollBtn = document.getElementById("enrollBtn");
+    const closeBtn = document.getElementById("closeModal");  // Close button element
 
-    // Populate modal with class information
     classDetails.innerHTML = `
         <strong>${classItem.Exercise_Type}</strong><br>
         Time: ${classItem.Time_start} - ${classItem.Time_end}<br>
@@ -193,21 +193,23 @@ function showModal(classItem) {
         Remaining Capacity: ${classItem.Remaining_Capacity}
     `;
 
-    // Show the modal
     modal.style.display = "block";
 
-    // Enroll button click (Handle enrollment logic here)
+    closeBtn.onclick = function() {
+        closeModal();
+    };
+
     enrollBtn.onclick = function() {
         console.log(`Enrolling in class ${classItem.Class_ID}`);
-        // Add your enrollment logic here (e.g., API call)
         closeModal();
     };
 }
 
-// Close modal when the close button is clicked
-document.getElementById("closeModal").addEventListener('click', closeModal);
+function closeModal() {
+    const modal = document.getElementById("enrollModal");
+    modal.style.display = "none";
+}
 
-// Close modal when clicking outside the modal content
 window.onclick = function(event) {
     const modal = document.getElementById("enrollModal");
     if (event.target === modal) {
@@ -215,10 +217,6 @@ window.onclick = function(event) {
     }
 };
 
-function closeModal() {
-    const modal = document.getElementById("enrollModal");
-    modal.style.display = "none";
-}
 
 
 
