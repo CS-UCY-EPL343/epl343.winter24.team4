@@ -79,11 +79,11 @@ def signup():
         phone = request.form.get('Phone')  # Optional field
 
         if not all([first_name, last_name, email, password]):
-            return jsonify({"error": "All required fields must be filled out."}), 400
+            return render_template('/signup.html', error="All required fields must be filled out."), 400
 
         password_error = validate_password(password)
         if password_error:
-            return jsonify({"error": password_error}), 400
+            return render_template('/signup.html', error=password_error), 400
 
         try:
             success = AddNewUserToDb(
@@ -97,19 +97,20 @@ def signup():
             if success:
                 return redirect(url_for('auth.login'))  # Redirect to login after successful signup
             else:
-                return jsonify({"error": "Signup failed. Please try again."}), 500
+                return render_template('/signup.html', error="Signup failed. Please try again."), 500
         except Exception as e:
-            return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+            return render_template('/signup.html', error=f"An error occurred: {str(e)}"), 500
 
     elif request.method == 'GET':
         if 'user_id' in session:
-            return redirect(url_for('main.dashboard'))  # Redirect to dashboard if already logged in
+            return redirect(url_for('main.home'))  # Redirect to dashboard if already logged in
         return render_template('/signup.html')
+
 
 
 # Add a logout route to clear the session
 @auth.route('/logout', methods=['GET'])
 def logout():
-    session.pop('user_id', None)  # Remove the user from session
+    session.clear()
     return redirect(url_for('auth.login'))  # Redirect to login page after logout
 
