@@ -81,7 +81,7 @@ body {
   }
   
   #logout-menu:hover {
-    color: rgba(135, 21, 21, 0.826);
+    color: rgba(230, 43, 43, 0.826);
     transform: scale(1.1); /* Slight zoom effect for the button */
   }
   
@@ -209,3 +209,31 @@ body {
     transform: scale(0.95); /* Slight shrink effect on click */
   }
   
+  #profile-info {
+    background: rgba(255, 255, 255, 0.1); /* Light translucent background */
+    padding: 20px; /* Add padding for spacing */
+    border-radius: 8px; /* Rounded corners for modern look */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    width: 80%; /* Centralize the profile box */
+    max-width: 600px; /* Limit maximum width */
+    color: #fff; /* White text for better contrast */
+    text-align: left; /* Align text to the left for better readability */
+    margin: 0 auto; /* Center the content horizontally */
+    font-size: 16px; /* Standard font size */
+    line-height: 1.5; /* Improve readability with line height */
+}
+
+#profile-info h2 {
+    color: #fff; /* White heading text */
+    margin-bottom: 20px; /* Add space below heading */
+    font-size: 24px; /* Larger font size for heading */
+}
+
+#profile-info p {
+    margin: 10px 0; /* Add spacing between paragraphs */
+}
+
+#profile-info strong {
+    color: rgb(171, 252, 41); /* Highlight key info with green color */
+    font-weight: bold; /* Make it bold for emphasis */
+}

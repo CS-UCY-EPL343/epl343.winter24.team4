@@ -50,3 +50,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
   
+  
+function profileInfo() {
+    const apiUrl = '.....';
+
+    return fetch(`${apiUrl}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Data received:', data);
+            getInfo(data);
+        })
+        .catch(error => {
+            console.error('Error fetching week classes:', error);
+        });
+}
+
+
+function getInfo(data) {
+    // Ensure the data structure matches your API response
+    document.getElementById('fname').innerHTML = `<strong>First Name:</strong> ${data.firstName || 'N/A'}`;
+    document.getElementById('lname').innerHTML = `<strong>Last Name:</strong> ${data.lastName || 'N/A'}`;
+    document.getElementById('email').innerHTML = `<strong>Email:</strong> ${data.email || 'N/A'}`;
+    document.getElementById('birthday').innerHTML = `<strong>Birthday:</strong> ${data.birthday || 'N/A'}`;
+    document.getElementById('phone').innerHTML = `<strong>Phone:</strong> ${data.phone || 'N/A'}`;
+}

@@ -15,13 +15,20 @@
     </ul>
     </div>
     <div class="content">
-      <div id="profile-info" class="content-box">
-        <h2>Profile Information</h2>
-        <p>Welcome! Here is your profile information.</p>
-      </div>
+        <div id="profile-info" class="content-box">
+            <h2>Profile Information</h2>
+            <p>Welcome! Here is your profile information.</p>
+            <p id="fname"><strong>First Name:</strong> </p>
+            <p id="lname"><strong>Last Name:</strong> </p>
+            <p id="fname"><strong>First Name:</strong> </p>
+            <p id="email"><strong>Email:</strong> </p>
+            <p id="birthday"><strong>Birthday:</strong> </p>
+            <p id="phone"><strong>Phone:</strong> </p>
+          </div>
+        
       <div id="change-password" class="content-box hidden">
         <h2>Change Password</h2>
-        <form>
+        <form method="POST" action="/profile">
           <label for="old-password">Old Password:</label>
           <input type="password" id="old-password" required>
           <label for="new-password">New Password:</label>
@@ -29,16 +36,29 @@
           <label for="confirm-password">Confirm Password:</label>
           <input type="password" id="confirm-password" required>
           <button type="submit">Update Password</button>
+          {% if passworderror %}
+            <script>
+                alert("{{ error}}");
+            </script>
+            {% endif %}
+        
         </form>
       </div>
       <div id="change-email" class="content-box hidden">
         <h2>Change Email</h2>
-        <form>
+        <form method="POST" action="/profile">
           <label for="new-email">New Email:</label>
           <input type="email" id="new-email" required>
           <label for="old-password">Password For Approval:</label>
           <input type="password" id="old-password" required>
           <button type="submit">Update Email</button>
+          {% if emailerror %}
+                <script>
+                    alert("{{ error}}");
+                </script>
+            {% endif %}
+
+
         </form>
       </div>
     </div>
