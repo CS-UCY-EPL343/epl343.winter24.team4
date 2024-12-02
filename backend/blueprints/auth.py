@@ -156,5 +156,8 @@ def profile():
             else:
                 return render_template('profile.html', emailerror="User not found."), 404
 
-
-
+@auth.route('/getProfile',methods=['GET'])
+def getprofile():
+    user = getInfoFromUserId(session['user_id'])
+    if user:
+        return jsonify(user)
