@@ -19,13 +19,13 @@ def AddNewUserToDb(Fname, Lname, Email, Password, Birthday=None, Phone=None):
     """
     qry = """
     INSERT INTO Users (Fname, Lname, Email, Password, Birthday, Phone)
-    VALUES (:Fname, :Lname, :Email, :Password, :Birthday, :Phone);
+    VALUES (:FName, :LName, :Email, :Password, :Birthday, :Phone);
     """
     
     # Pass parameters as a dictionary
     params = {
-        "Fname": Fname,
-        "Lname": Lname,
+        "FName": Fname,
+        "LName": Lname,
         "Email": Email,
         "Password": Password,
         "Birthday": Birthday,

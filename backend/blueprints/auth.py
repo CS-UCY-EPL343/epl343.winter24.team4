@@ -1,8 +1,7 @@
-from flask import session, url_for
+from flask import Blueprint, redirect, request, render_template, jsonify, session, url_for
 from scripts.user.addNewUser import AddNewUserToDb
 import bcrypt
 import re
-from flask import Blueprint, redirect, request, render_template, jsonify
 
 
 from scripts.user.checkUserCredentials import checkUserCredentials
@@ -30,11 +29,18 @@ def validate_password(password):
         return "Password must contain at least one special character."
     return None
 
+def is_admin():
+    if('isAdmin' not in session or not session.get('isAdmin')):
+        return False
+    else: 
+        return True
+        
+        
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('Email')
-        password = request.form.get('Password')
+        email = request.form.get('email')
+        password = request.form.get('password')
 
         # Check if the user exists
         user = checkUserCredentials(email)
@@ -46,8 +52,9 @@ def login():
                 # Check if the password matches
                 if check_password(password, stored_password):
                     # Save the user in the session
-                    session['user_id'] = user[0].get('id')  # Assuming 'id' is the user identifier
-                    return jsonify({"message": "Login successful", "user": user[0]}), 200
+                    session['user_id'] = user[0].get('User_ID')  # Assuming 'id' is the user identifier
+                    session['isAdmin'] = user[0].get('isAdmin') 
+                    return redirect(url_for('main.home'))
                 else:
                     return jsonify({"message": "Invalid email or password"}), 401
             else:
@@ -57,7 +64,7 @@ def login():
 
     elif request.method == 'GET':
         if 'user_id' in session:  # Check if the user is already logged in
-            return redirect(url_for('main.dashboard'))  # Redirect to a dashboard or user page
+            return redirect(url_for('main.home'))  # Redirect to a dashboard or user page
         return render_template('/login.html')
 
 
