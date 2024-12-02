@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Login Page</title>
+    <link rel="stylesheet" href="../static/logIn.css">
 </head>
 <body>
     <h2>Login</h2>
@@ -14,7 +15,14 @@
         <label for="password">Password:</label><br>
         <input type="password" id="password" name="password" required><br><br>
         
-        <button type="submit">Login</button>
+        <div class="button-container">
+            <a href="/signup">Register Now</a>
+            <button type="submit">Login</button>
+        </div>
+        
+        <div class="cancel-container">
+            <button type="button" onclick="history.back()">Cancel</button>
+        </div>
     </form>
 </body>
 </html>

@@ -71,8 +71,22 @@ function populateClasses(data){
             const today = new Date();
             formattedToday = formatDate(today);
             const classDate = formatDate(new Date(classItem.Date));
-            if(classItem.Remaining_Capacity === 0 || classDate < formattedToday){
+            if(classItem.Remaining_Capacity === 0){
                 classBox.style.backgroundColor = "#999999";
+                classBox.addEventListener('click', function() {
+                    console.log(`Class-box with id "${classBox.id}" clicked!`);
+                    showModal(classItem);
+                });
+            }
+            if(classDate < formattedToday){
+                classBox.style.backgroundColor = "#999999";
+                classBox.style.pointerEvents = "none";
+            }
+            else{
+                classBox.addEventListener('click', function() {
+                    console.log(`Class-box with id "${classBox.id}" clicked!`);
+                    showModal(classItem);
+                });
             }
             classBox.addEventListener('click', function() {
             console.log(`Class-box with id "${classBox.id}" clicked!`);
@@ -165,6 +179,65 @@ function clearClassBoxes() {
     const classBoxes = document.querySelectorAll('.class-box');
     classBoxes.forEach(box => box.remove());
 }
+
+function showModal(classItem) {
+    const modal = document.getElementById("enrollModal");
+    const classDetails = document.getElementById("classDetails");
+    const enrollBtn = document.getElementById("enrollBtn");
+    const closeBtn = document.getElementById("closeModal");  
+
+    classDetails.innerHTML = `
+        <strong>${classItem.Exercise_Type}</strong><br>
+        Time: ${classItem.Time_start} - ${classItem.Time_end}<br>
+        Price: €${classItem.Price}<br>
+        Remaining Capacity: ${classItem.Remaining_Capacity}
+    `;
+
+    modal.style.display = "block";
+
+    closeBtn.onclick = function() {
+        closeModal();
+    };
+
+    enrollBtn.onclick = function() {
+        const apiUrl = '/enroll';
+        const classId = classItem.Class_ID;
+        
+        const data = { class_id: classId };
+    
+        return fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',  
+            },
+            body: JSON.stringify(data)  
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            closeModal();
+            return response.json();    
+        })
+        .catch(error => {
+            console.error('Error enrolling in class:', error);
+        });
+    };
+}
+
+function closeModal() {
+    const modal = document.getElementById("enrollModal");
+    modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById("enrollModal");
+    if (event.target === modal) {
+        closeModal();
+    }
+};
+
+
 
 
 
