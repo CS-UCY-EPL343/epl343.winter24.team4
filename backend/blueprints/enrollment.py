@@ -13,7 +13,7 @@ enrollment = Blueprint('enrollment', __name__)
 def enrollments():
     return render_template('enrollments.html')
 
-@enrollments.route('/enrollments',  methods=['GET'])
+@enrollment.route('/api/enrollments',  methods=['GET'])
 def getenrollments():
     try:
         # Check if the user is logged in by verifying session data
