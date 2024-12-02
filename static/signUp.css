@@ -1,39 +1,123 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: #fff;
+    background-image: url(Pictures/background-image2.jpg);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Header Section */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: transparent;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 10;
+    height: 80px;  /* Define a height for the header */
+}
+
+/* Center the entire form */
+.hero {
+    margin-top: 65px;  /* Match the header height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 80px);  /* Adjust the height of the hero section */
+    padding: 20px;  /* Add padding to prevent elements touching the edges */
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;  /* Stack form elements vertically */
+    justify-content: flex-start;  /* Align items from the top */
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 20px 40px;  /* Reduced padding for a smaller form */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+    width: 30rem;  /* Reduced width of the box */
+    height: auto;
+}
+
+/* Increase the font size of the header */
+.hero-content h2 {
+    font-size: 2rem;  /* Smaller font size for the header */
+    margin-bottom: 20px;
+    color: rgb(255, 255, 255);
+}
+
+/* Labels and Inputs */
+label {
+    font-size: 1rem;  /* Adjusted font size for labels */
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+input {
+    font-size: 1rem;  /* Adjusted font size for inputs */
+    padding: 8px;
+    width: 100%;
+    margin-bottom: 10px;  /* Reduced margin between input fields */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
 /* Button Container */
 .button-container {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
     margin-top: 20px;
+    gap: 10px;
+    width: 100%;
 }
 
-.button-container button {
-    padding: 8px 16px;
-    font-size: 16px;
-    cursor: pointer;
+/* Buttons */
+button {
+    padding: 12px 20px;  /* Button size */
+    background-color: transparent;
+    color: rgb(255, 247, 247);
     border: none;
     border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.2rem;
+    text-align: center;
+    text-decoration: none;
 }
 
-.button-container .submit-button {
-
-    background-color: #007BFF;
-    color: white;
-    cursor: not-allowed; /* Initially disabled */
+/* Button Hover Effect */
+button:hover {
+    color: rgb(171, 252, 41);  /* Green text color on hover */
+    text-decoration: underline;  /* Underline text */
+    transform: scale(1.1);  /* Slight zoom effect */
+    transition: transform 0.3s ease;  /* Smooth transition */
 }
 
-.button-container .submit-button:hover {
-    background-color: #0056b3;
+/* Style for the Cancel button */
+.cancel-container button {
+    color: rgb(255, 247, 247);
+    background-color: transparent;
 }
 
-.button-container .cancel-button {
-    margin-top: 10px;
-    background-color: #dc3545;
-    color: white;
+.cancel-container button:hover {
+    text-decoration: underline;
 }
 
-.button-container .cancel-button:hover {
-    background-color: #b02a37;
-}
 
 /* Inline Error Message */
 .error-message {
@@ -46,15 +130,15 @@
 .error-box {
     position: fixed;
     top: 50%;
-    left: 50%;
+    left: 80%;
     transform: translate(-50%, -50%);
-    background-color: #e6f7ff; /* Light blue background */
-    border: 2px solid #1890ff; /* Blue border */
+    background-color: rgb(224, 236, 205); /* Light blue background */
+    border: 2px solid rgb(171, 252, 41); /* Blue border */
     border-radius: 10px;
     padding: 20px;
     width: 300px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    color: #003a8c; /* Dark blue text */
+    color: #000000; /* Dark blue text */
     font-size: 16px;
     text-align: left;
     display: none; /* Hidden by default */
@@ -72,3 +156,20 @@
     margin-bottom: 10px;
     display: block;
 }
+
+   /*-----Logo-----*/
+   .logo {
+    width: 100px;
+    height: 60px;
+
+    background: url('Pictures/logo-image.png') no-repeat center/contain;
+
+  }
+  .logo-btn {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
