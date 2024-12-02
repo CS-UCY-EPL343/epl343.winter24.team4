@@ -43,7 +43,7 @@ def insertPayment():
     if session['isAdmin']:
         try:
             data = request.json
-            user_id = session['user_id']
+            user_id = data.get('user_id')
             class_id = data.get('class_id')
             payment_type = data.get('payment_type')
 
