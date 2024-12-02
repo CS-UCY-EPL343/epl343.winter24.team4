@@ -26,19 +26,14 @@ def calendarRender():
             try:
                 start_of_week = datetime.strptime(start_date_str, '%Y-%m-%d')
                 end_of_week = datetime.strptime(end_date_str, '%Y-%m-%d')
-                return jsonify(selectWeekClasses(start_of_week, end_of_week))
+                return jsonify(classes = selectWeekClasses(start_of_week, end_of_week))
             except ValueError:
                 return jsonify({"error": "Invalid date format. Use YYYY-MM-DD."}), 400
 
         # Fetch or calculate relevant data for the calendar view within the range
         classes = selectWeekClasses(start_of_week, end_of_week)
 
-        return render_template(
-            'calendar.html',
-            classes=classes,
-            start_date=start_of_week.strftime('%Y-%m-%d'),
-            end_date=end_of_week.strftime('%Y-%m-%d')
-        )
+        return render_template('calendar.html')
 
 
 
