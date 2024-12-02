@@ -113,23 +113,39 @@ function populateClasses(data) {
             // Create unique ID for student list
             const studentListId = `student-list-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
             
+            const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
             classItem.innerHTML = `
                 <p>Hours: ${classInfo.Time_start} - ${classInfo.Time_end}</p>
                 <p>Class Type: ${classInfo.Exercise_Type}</p>
                 <p>Capacity: ${classInfo.Remaining_Capacity}/${classInfo.Max_capacity}</p>
-                <button class="remove-class">Remove</button>
+                ${
+                    classInfo.Date >= today
+                    ? `<button class="remove-class" id="${classInfo.Class_ID}">Remove</button>`
+                    : ""
+                }
                 <button class="view-students" data-student-list="${studentListId}">View Students</button>
                 <div id="${studentListId}" class="student-list" style="display: none;"></div>
             `;
 
-
-            // Add logic for removing classes
-            classItem.querySelector('.remove-class').addEventListener('click', () => {
-                classItem.remove();
-                adjustDropdownHeight(dayContainer.closest('.dropdown-content'));
+            document.addEventListener("click", function(event) {
+                if (event.target.classList.contains("remove-class")) {
+                    // Log the ID of the clicked button
+                    console.log("Remove button ID:", event.target.id);
+                }
             });
+            
+            const button = classItem.querySelector('remove-class');
+            if(button){
+                classItem.querySelector('.remove-class').addEventListener('click', () => {
+                    classItem.remove();
 
-            // Add logic for viewing students
+                    
+                    
+                    adjustDropdownHeight(dayContainer.closest('.dropdown-content'));
+                });
+            }
+
             classItem.querySelector('.view-students').addEventListener('click', (event) => {
                 const studentList = document.getElementById(event.target.getAttribute('data-student-list'));
                 const modal = document.getElementById('view-students-modal');
