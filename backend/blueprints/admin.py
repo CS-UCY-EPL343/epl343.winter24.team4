@@ -30,7 +30,7 @@ def admin_payments():
         else:
             return redirect(url_for('main.home'))
         
-@admin.route('/admin/class', methods=['GET', 'POST'])
+@admin.route('/admin/admin-class', methods=['GET', 'POST'])
 def calendarRender():
     if request.method == 'GET':
         if(not 'user_id' in session):
