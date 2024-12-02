@@ -3,13 +3,15 @@ from scripts.addNewClass import AddClass
 from scripts.selectClass import *
 from scripts.selectExerciseType import *
 from datetime import timedelta
-from flask import Blueprint, request, render_template, jsonify
+from flask import Blueprint, request, render_template, jsonify, session, redirect, url_for
 
 calendar = Blueprint('calendar', __name__)
 
 @calendar.route('/calendar', methods=['GET', 'POST'])
 def calendarRender():
     if request.method == 'GET':
+        if(not 'user_id' in session):
+                return(redirect(url_for('main.home')))
         # Check for query parameters for start and end dates (optional)
         start_date_str = request.args.get('start_date')
         end_date_str = request.args.get('end_date')
@@ -41,6 +43,8 @@ def calendarRender():
 
 @calendar.route('/enroll', methods=['GET', 'POST'])  # TODO:Check for max capacity.
 def register():
+    if(not 'user_id' in session):
+        return(redirect(url_for('main.home')))
     if request.method == 'POST':
         try:
             user_id = request.form.get('user_id')
@@ -54,7 +58,7 @@ def register():
         except Exception as e:
             return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
-    if request.method == 'GET':
+    if request.method == 'GET': 
         try:
             # Fetch all classes
             classes_json = SelectAllClasses()
@@ -94,6 +98,8 @@ def register():
 
 @calendar.route('/addClass', methods=['GET', 'POST'])  # TODO:NEEDS SOME CHECKS
 def add_class():
+    if(not 'user_id' in session):
+        return(redirect(url_for('main.home')))
     if request.method == 'POST':
         try:
             # Handle form submission
@@ -135,7 +141,8 @@ def add_class():
 
             exercise_types = json.loads(result)
             # Render the form with exercise types
-            return render_template('addClass.html', exercise_types=exercise_types)
+            return render_template('addClass.html', 
+                                   exercise_types=exercise_types)
 
         except Exception as e:
             return jsonify({"error": f"An error occurred: {str(e)}"}), 500
