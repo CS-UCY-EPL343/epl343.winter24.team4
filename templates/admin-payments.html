@@ -72,8 +72,8 @@
         .client-details {
             display: none;
             padding: 20px;
-            background-color: #007bff;
-            color: #ffffff;
+            background-color: #ffffff;
+            color: #000000;
             border-radius: 8px;
             width: 100%;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
@@ -82,12 +82,10 @@
             margin-top: 0;
         }
         .class-table {
-            margin-top: 10px;
+            margin-top: 20px;
             width: 100%;
             border-collapse: collapse;
             background-color: #ffffff;
-            border-radius: 5px;
-            overflow: hidden;
         }
         .class-table th,
         .class-table td {
@@ -102,14 +100,13 @@
         .class-table td {
             color: #000000;
         }
-        .month-header {
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 20px;
+        .pay-dropdown,
+        .pay-button {
+            margin-top: 10px;
+            font-size: 14px;
         }
         .pay-button {
             padding: 5px 10px;
-            font-size: 14px;
             color: #ffffff;
             background-color: #28a745;
             border: none;
@@ -119,13 +116,15 @@
         .pay-button:hover {
             background-color: #218838;
         }
-        .pay-button.pending {
-            background-color: #ffc107;
-            color: #000000;
+        .pay-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
         }
-        .pay-button.paid {
-            background-color: #6c757d;
-            cursor: default;
+        .month-header {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            text-align: left;
+            padding: 10px;
         }
         .back-button {
             display: inline-block;
@@ -141,12 +140,6 @@
         .back-button:hover {
             background-color: #003f7f;
         }
-        .payment-dropdown {
-            padding: 5px;
-            font-size: 14px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
     </style>
 </head>
 <body>
@@ -158,34 +151,54 @@
         <div id="clientDetails" class="client-details">
             <h2>Client Details</h2>
             <p>Name: <span id="memberName"></span> <span id="memberSurname"></span></p>
-            <div id="classDetails"></div>
+            <table class="class-table" id="classTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time Start</th>
+                        <th>Time End</th>
+                        <th>Price</th>
+                        <th>Payment Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Class details will be injected here -->
+                </tbody>
+            </table>
             <button class="back-button" onclick="goBack()">Back</button>
         </div>
     </div>
 
     <script>
         let clients = [];
-        const classes = {}; // Replace with your logic to dynamically fetch class data if needed
+        let paymentOptions = [];
 
         async function fetchClients() {
             try {
-                const response = await fetch('https://api.example.com/clients'); // Replace with your API endpoint
+                const response = await fetch('/api/getAllUsers'); // Adjust to your API endpoint
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-                clients = await response.json();
-
-                // Optionally, generate class data dynamically for demonstration
-                clients.forEach(client => {
-                    classes[client.id] = [
-                        { date: "2024-12-01", price: "$50", paid: Math.random() < 0.5 },
-                        { date: "2024-12-08", price: "$50", paid: Math.random() < 0.5 }
-                    ];
-                });
+                const data = await response.json();
+                clients = data.users;
 
                 renderClients(clients);
             } catch (error) {
                 console.error("Error fetching clients:", error);
+            }
+        }
+
+        async function fetchPaymentOptions() {
+            try {
+                const response = await fetch('/api/fetchPaymentType'); // Adjust to your API endpoint
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                paymentOptions = data.map(option => ({ name: option.P_Name, id: option.Payment_Type_ID }));
+            } catch (error) {
+                console.error("Error fetching payment options:", error);
             }
         }
 
@@ -197,11 +210,11 @@
                 clientItem.className = 'client-item';
                 clientItem.innerHTML = `
                     <div class="client-avatar">
-                        ${client.firstName[0]}${client.lastName[0]}
+                        ${client.FName[0]}${client.LName[0]}
                     </div>
-                    <div>${client.firstName} ${client.lastName}</div>
+                    <div>${client.FName} ${client.LName}</div>
                 `;
-                clientItem.onclick = () => showClientDetails(client.id, client.firstName, client.lastName);
+                clientItem.onclick = () => showClientDetails(client);
                 clientList.appendChild(clientItem);
             });
         }
@@ -209,9 +222,79 @@
         function filterClients() {
             const query = document.getElementById("searchInput").value.toLowerCase();
             const filteredClients = clients.filter(client =>
-                client.firstName.toLowerCase().includes(query) || client.lastName.toLowerCase().includes(query)
+                client.FName.toLowerCase().includes(query) || client.LName.toLowerCase().includes(query)
             );
             renderClients(filteredClients);
+        }
+
+        async function showClientDetails(client) {
+            document.getElementById("memberName").textContent = client.FName;
+            document.getElementById("memberSurname").textContent = client.LName;
+
+            document.getElementById("clientRecords").style.display = "none";
+            document.getElementById("clientDetails").style.display = "block";
+            document.getElementById("searchInput").style.display = "none";
+
+            try {
+                const response = await fetch(`http://127.0.0.1:5000/api/getUsersClasses?user_id=${client.User_id}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const classData = await response.json();
+                renderClassDetails(classData);
+            } catch (error) {
+                console.error("Error fetching class data:", error);
+            }
+        }
+
+        function renderClassDetails(classes) {
+            const classTableBody = document.querySelector("#classTable tbody");
+            classTableBody.innerHTML = '';
+
+            const groupedClasses = classes.reduce((acc, cls) => {
+                const month = new Date(cls.Class_Date).toLocaleString('default', { month: 'long', year: 'numeric' });
+                if (!acc[month]) acc[month] = [];
+                acc[month].push(cls);
+                return acc;
+            }, {});
+
+            for (const [month, monthClasses] of Object.entries(groupedClasses)) {
+                const monthHeaderRow = document.createElement("tr");
+                monthHeaderRow.innerHTML = `
+                    <td colspan="6" class="month-header">${month}</td>
+                `;
+                classTableBody.appendChild(monthHeaderRow);
+
+                monthClasses.forEach((cls, index) => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${cls.Class_Date}</td>
+                        <td>${cls.Time_start}</td>
+                        <td>${cls.Time_end}</td>
+                        <td>${cls.Price.toFixed(2)}</td>
+                        <td id="paymentStatus-${index}">${cls.Payment_Status}</td>
+                        <td>
+                            ${
+                                cls.Payment_Status === "Not Paid"
+                                    ? `
+                                        <select class="pay-dropdown">
+                                            ${paymentOptions.map(option => `<option value="${option.id}">${option.name}</option>`).join("")}
+                                        </select>
+                                        <button class="pay-button" onclick="markAsPaid(${index})">Pay</button>
+                                    `
+                                    : `<button class="pay-button" disabled>Paid</button>`
+                            }
+                        </td>
+                    `;
+                    classTableBody.appendChild(row);
+                });
+            }
+        }
+
+        function markAsPaid(index) {
+            const statusCell = document.getElementById(`paymentStatus-${index}`);
+            statusCell.textContent = "Paid";
+            alert("Payment status updated to 'Paid'.");
         }
 
         function goBack() {
@@ -220,8 +303,9 @@
             document.getElementById("searchInput").style.display = "block";
         }
 
-        // Fetch clients on page load
+        // Fetch clients and payment options on page load
         fetchClients();
+        fetchPaymentOptions();
     </script>
 </body>
 </html>
