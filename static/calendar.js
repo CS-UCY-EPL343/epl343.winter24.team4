@@ -1,29 +1,60 @@
 window.onload = function() {
-    const date = getMondayThisWeek();
-    const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+    const monday = getMondayThisWeek();
+    console.log(monday);
+    const sunday = new Date(monday);
+    sunday.setDate(sunday.getDate() + 6);
+    console.log(sunday);
 
-    for (let i = 0; i < 7; i++) {
-        document.getElementById(days[date.getDay()]+ "-day").innerHTML =
-            days[date.getDay()].toUpperCase() + "<br/>" +
-            date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-        date.setDate(date.getDate() + 1);
-    }
+    formattedMonday = formatDate(monday);
+    formattedSunday = formatDate(sunday);
+
+
+    thisWeekClasses(formattedMonday, formattedSunday)
+            .then(data => {
+                console.log('Classes this week:', data);
+            })
+            .catch(error => {
+                console.error('Error fetching classes:', error);
+            });
+
+    populateWeekDates(monday);
 
     document.getElementById('left-arrow').addEventListener('click', function() {
         console.log('Left arrow clicked');
+        const dayElement = document.querySelector('#monday .day');
+        console.log(dayElement.id);
+
+        getLastWeekFromCurrent(dayElement.id)
     });
 
     document.getElementById('right-arrow').addEventListener('click', function() {
         console.log('Right arrow clicked');
+        const dayElement = document.querySelector('#monday .day');
+        console.log(dayElement.id);
+
+        getNextWeekFromCurrent(dayElement.id)
     });
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("Calendar Data:", calendarData);
+function formatDate(date){
+    return date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+}
 
+function populateWeekDates(date){
+    const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+    for (let i = 0; i < 7; i++) {
+        const column = document.getElementById(days[date.getDay()])
+        const day = column.querySelector('.day');
+        day.id = date;
+        day.innerHTML=days[date.getDay()].toUpperCase() + "<br/>" + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+        date.setDate(date.getDate() + 1);
+    }
+}
+
+function populateClasses(data){
     const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 
-    calendarData.classes.forEach(classItem => {
+    data.classes.forEach(classItem => {
         const classDate = new Date(classItem.Date);
         const dayColumnId = days[classDate.getDay()];
         console.log(dayColumnId);
@@ -37,17 +68,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p>Price: €${classItem.Price}</p>
                 <p>Capacity: ${classItem.Remaining_Capacity}</p>
             `;
-            if(classItem.Remaining_Capacity === 0){
+            const today = new Date();
+            formattedToday = formatDate(today);
+            const classDate = formatDate(new Date(classItem.Date));
+            if(classItem.Remaining_Capacity === 0 || classDate < formattedToday){
                 classBox.style.backgroundColor = "#999999";
             }
             classBox.addEventListener('click', function() {
-                console.log(`Class-box with id "${classBox.id}" clicked!`);
+            console.log(`Class-box with id "${classBox.id}" clicked!`);
     });
         } else {
             console.error(`Column not found for day: ${dayColumnId}`);
         }
     });
-});
+}
 
 function addClassBox(day) {
     const parentDiv = document.getElementById(day);
@@ -69,7 +103,6 @@ function getMondayThisWeek() {
 
     const startOfWeek = new Date(today);
     startOfWeek.setDate(today.getDate() + diffToMonday);
-    startOfWeek.setHours(0, 0, 0, 0);
 
     return startOfWeek;
 }
@@ -77,14 +110,63 @@ function getMondayThisWeek() {
 
 function thisWeekClasses(startDate, endDate) {
     const apiUrl = '/calendar';
+
     return fetch(`${apiUrl}?start_date=${startDate}&end_date=${endDate}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
+        })
+        .then(data => {
+            console.log('Data received:', data);
+            populateClasses(data);
+        })
+        .catch(error => {
+            console.error('Error fetching week classes:', error);
         });
 }
+
+
+function getNextWeekFromCurrent(currentMonday) {
+    const nextMonday = new Date(currentMonday);
+    nextMonday.setDate(nextMonday.getDate() + 7);
+
+    const nextSunday = new Date(nextMonday);
+    nextSunday.setDate(nextSunday.getDate() + 6);
+
+    populateWeekDates(new Date(nextMonday));
+
+    formattedMonday = formatDate(nextMonday);
+    formattedSunday = formatDate(nextSunday);
+
+    clearClassBoxes();
+    data = thisWeekClasses(formattedMonday, formattedSunday);
+}
+
+function getLastWeekFromCurrent(currentMonday) {
+
+    const lastMonday = new Date(currentMonday);
+    lastMonday.setDate(lastMonday.getDate() - 7);
+
+    const lastSunday = new Date(lastMonday);
+    lastSunday.setDate(lastMonday.getDate() + 6);
+
+    populateWeekDates(new Date(lastMonday));
+
+    formattedMonday = formatDate(lastMonday);
+    formattedSunday = formatDate(lastSunday);
+
+    clearClassBoxes();
+    thisWeekClasses(formattedMonday, formattedSunday);
+}
+
+function clearClassBoxes() {
+    const classBoxes = document.querySelectorAll('.class-box');
+    classBoxes.forEach(box => box.remove());
+}
+
+
 
 
 
