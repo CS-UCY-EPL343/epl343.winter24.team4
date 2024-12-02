@@ -67,7 +67,13 @@ document.addEventListener('DOMContentLoaded', () => {
         form.innerHTML = `
             <input type="text" placeholder="Class Hours (e.g., 10:00 - 11:00)" required class="class-hours">
             <input type="text" placeholder="Description" required class="class-description">
-            <input type="text" placeholder="Class Type (e.g., Yoga)" required class="class-type">
+            <select required class="class-type">
+                <option value="" disabled selected>Select Class Type</option>
+                <option value="Yoga">Yoga</option>
+                <option value="Dance">Dance</option>
+                <option value="Pilates">Pilates</option>
+                <option value="Zumba">Zumba</option>
+            </select>
             <input type="number" placeholder="Capacity (e.g., 20)" required class="class-capacity">
             <button type="submit">Add</button>
             <button type="button" class="cancel">Cancel</button>
@@ -97,8 +103,11 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
 
             classItem.querySelector('.remove-class').addEventListener('click', () => {
-                classItem.remove();
-                adjustDropdownHeight(container.closest('.dropdown-content'));
+                classItem.classList.add('removing'); // Add transition class
+                setTimeout(() => {
+                    classItem.remove(); // Remove after the transition
+                    adjustDropdownHeight(container.closest('.dropdown-content'));
+                }, 300); // Match CSS transition duration
             });
 
             classItem.querySelector('.view-students').addEventListener('click', (event) => {
@@ -113,9 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 modalStudentList.querySelectorAll('.remove-student').forEach(button => {
                     button.addEventListener('click', () => {
                         const studentElement = button.parentElement;
-                        const studentName = studentElement.textContent.trim();
                         studentElement.remove();
-                        const matchingStudent = [...studentList.children].find(child => child.textContent.trim() === studentName);
+                        const matchingStudent = [...studentList.children].find(child => child.textContent.trim() === studentElement.textContent.trim());
                         if (matchingStudent) matchingStudent.remove();
                     });
                 });
@@ -162,16 +170,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function attachRemoveLogic(studentItem) {
         const removeButton = studentItem.querySelector('.remove-student');
-        removeButton.classList.add('remove-student'); // Ensure the button has the correct class
         removeButton.addEventListener('click', () => {
-            const studentName = studentItem.textContent.trim();
             studentItem.remove();
-            // Remove from other lists if needed
-            const matchingStudent = [...document.querySelectorAll(`#${studentItem.id}`)]
-                .find(student => student.textContent.trim() === studentName);
-            if (matchingStudent) matchingStudent.remove();
         });
-    }    
+    }
 
     addClassButtons.forEach((button) => {
         button.addEventListener('click', () => {
