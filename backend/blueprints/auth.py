@@ -56,11 +56,11 @@ def login():
                     session['isAdmin'] = user[0].get('isAdmin') 
                     return redirect(url_for('main.home'))
                 else:
-                    return jsonify({"message": "Invalid email or password"}), 401
+                    return render_template('/login.html', error="Invalid email or password."), 401
             else:
-                return jsonify({"message": "Password not found for this user"}), 400
+                return render_template('/login.html', error="Password not found for this user."), 400
         else:
-            return jsonify({"message": "User not found"}), 404
+            return render_template('/login.html', error="User not found."), 404
 
     elif request.method == 'GET':
         if 'user_id' in session:  # Check if the user is already logged in
@@ -79,11 +79,11 @@ def signup():
         phone = request.form.get('Phone')  # Optional field
 
         if not all([first_name, last_name, email, password]):
-            return jsonify({"error": "All required fields must be filled out."}), 400
+            return render_template('/signup.html', error="All required fields must be filled out."), 400
 
         password_error = validate_password(password)
         if password_error:
-            return jsonify({"error": password_error}), 400
+            return render_template('/signup.html', error=password_error), 400
 
         try:
             success = AddNewUserToDb(
@@ -97,9 +97,9 @@ def signup():
             if success:
                 return redirect(url_for('auth.login'))  # Redirect to login after successful signup
             else:
-                return jsonify({"error": "Signup failed. Please try again."}), 500
+                return render_template('/signup.html', error="Signup failed. Please try again."), 500
         except Exception as e:
-            return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+            return render_template('/signup.html', error=f"An error occurred: {str(e)}"), 500
 
     elif request.method == 'GET':
         if 'user_id' in session:
@@ -107,9 +107,10 @@ def signup():
         return render_template('/signup.html')
 
 
+
 # Add a logout route to clear the session
 @auth.route('/logout', methods=['GET'])
 def logout():
-    session.pop('user_id', None)  # Remove the user from session
+    session.clear()
     return redirect(url_for('auth.login'))  # Redirect to login page after logout
 

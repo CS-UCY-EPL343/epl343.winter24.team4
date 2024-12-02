@@ -1,75 +1,138 @@
-        body {
-            margin: 0;
-            padding: 0;
-        }
+body {
+    margin: 0;
+    padding: 0;
+}
 
-        #calendar_box {
-            margin-top: 120px;
-            background: dimgrey;
-            opacity: 80%;
-            padding: 10px;
-        }
+#calendar_box {
+    margin-top: 120px;
+    background: dimgrey;
+    opacity: 80%;
+    padding: 10px;
+}
 
-        .date-box {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 80%;
-            margin: 0 auto;
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f4f4f4;
-            text-align: center;
-            color: dimgrey;
-        }
+.date-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f4f4f4;
+    text-align: center;
+    color: dimgrey;
+}
 
-        .box {
-            display: flex;
-            max-width: 840px;
-            width: 100%;
-            height: 70vh;
-            margin: 0 auto;
-            margin-top: 20px;
-        }
+.box {
+    display: flex;
+    max-width: 840px;
+    width: 100%;
+    height: 70vh;
+    margin: 0 auto;
+    margin-top: 20px;
+}
 
-        .column {
-            flex: 0;
-            padding: 10px;
-            text-align: center;
-            min-width: 120px;
-            border-right: 1px solid white;
-        }
+.column {
+    flex: 0;
+    padding: 10px;
+    text-align: center;
+    min-width: 120px;
+    border-right: 1px solid white;
+}
 
-        .column:last-child {
-            border-right: none;
-        }
+.column:last-child {
+    border-right: none;
+}
 
-        .class-box {
-            background-color: rgb(171, 252, 41);
-            border-radius: 5px;
-            border: 1px solid black;
-            margin-top: 10px;
-            padding: 5px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            font-size: 14px;
-            text-align: center;
-            color: black;
-        }
+.class-box {
+    background-color: rgb(171, 252, 41);
+    border-radius: 5px;
+    border: 1px solid black;
+    margin-top: 10px;
+    padding: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    text-align: center;
+    color: black;
+}
 
-        .side-image {
-            position: absolute; /* Absolute positioning within the wrapper */
-            top: 50%; /* Centering vertically */
-            transform: translateY(-25%); /* Adjusting for exact centering */
-            width: 80px; /* Adjust size */
-            height: auto;
-        }
+.side-image {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-25%);
+    width: 80px;
+    height: auto;
+}
 
-        /* Left image styles */
-        .left {
-            left: 120px; /* Adjust as needed */
-        }
+.left {
+    left: 120px;
+}
 
-        /* Right image styles */
-        .right {
-            right: 120px; /* Adjust as needed */
-        }
+.right {
+    right: 120px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px;
+    opacity: 1;
+
+}
+
+.modal-content {
+    background-color: #5b5b5b;
+    opacity: 1;
+    margin: 5% auto;
+    padding: 20px;
+    width: 30%;
+    height: 40%;
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#enrollBtn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#enrollBtn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+#enrollBtn:active {
+    background-color: #388e3c;
+    transform: scale(0.98);
+}
+
+
