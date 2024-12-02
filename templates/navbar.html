@@ -21,11 +21,19 @@
         </nav>
 
         <div class="login">
-            <a href="login" class="login-link">
-                <img src="../static/Pictures/Account-icon.png" alt="LogIn Icon" class="login-image">
-                <span class="login-text"><u>Login</u></span>
-            </a>
+            {% if logged_in %}
+                <a href="/logout" class="login-link">
+                    <img src="../static/Pictures/Account-icon.png" alt="Account Icon" class="login-image">
+                    <span class="login-text"><u>Logout</u></span>
+                </a>
+            {% else %}
+                <a href="/login" class="login-link">
+                    <img src="../static/Pictures/Account-icon.png" alt="Account Icon" class="login-image">
+                    <span class="login-text"><u>Login</u></span>
+                </a>
+            {% endif %}
         </div>
+
     </header>
     {% block content %}
     <!-- Page-specific content will go here -->

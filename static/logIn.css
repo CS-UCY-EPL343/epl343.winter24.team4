@@ -1,0 +1,39 @@
+.button-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.button-container button, .button-container a {
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.button-container a {
+    text-decoration: none;
+    display: inline-block;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.button-container a:hover {
+    background-color: #0056b3;
+}
+
+.cancel-container button {
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+.cancel-container button:hover {
+    background-color: #b02a37;
+}
