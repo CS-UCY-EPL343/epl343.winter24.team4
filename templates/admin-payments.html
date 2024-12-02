@@ -1,3 +1,6 @@
+{% extends "navbar.html" %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,58 +12,26 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-        }
-        header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            padding: 10px 20px;
-            background-color: #4C6E57;
-        }
-        .logo-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 20px;
-            color: white;
-            font-weight: bold;
-        }
-        .navbar {
-            display: flex;
-            gap: 15px;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            padding: 5px 10px;
-        }
-        .navbar a.active {
-            background-color: #6C8C75;
-            border-radius: 5px;
-        }
-        .login {
-            display: flex;
-            align-items: center;
-        }
-        .login-link {
-            display: flex;
-            align-items: center;
-            color: white;
-            text-decoration: none;
-        }
-        .login-image {
-            width: 30px;
-            height: 30px;
-            margin-right: 5px;
+            height: 100vh;
+            background-color: #f8f9fa;
         }
         .content {
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            width: 500px;
+            align-items: flex-start;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
         }
         .search-bar {
             margin-bottom: 20px;
-            display: flex;
-            align-items: center;
+            width: 100%;
         }
         .search-bar input {
             width: 100%;
@@ -69,97 +40,189 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-        table {
+        .client-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+        .client-item {
+            display: flex;
+            align-items: center;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .client-item:hover {
+            background-color: #e0e0e0;
+        }
+        .client-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #d9d9d9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        .client-details {
+            display: none;
+            padding: 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            border-radius: 8px;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .client-details h2 {
+            margin-top: 0;
+        }
+        .class-table {
+            margin-top: 10px;
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            overflow: hidden;
         }
-        table, th, td {
+        .class-table th,
+        .class-table td {
             border: 1px solid #ddd;
-        }
-        th, td {
             padding: 10px;
             text-align: left;
         }
-        th {
-            background-color: #4C6E57;
-            color: white;
+        .class-table th {
+            background-color: #0056b3;
+            color: #ffffff;
+        }
+        .class-table td {
+            color: #000000;
+        }
+        .month-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .pay-button {
+            padding: 5px 10px;
+            font-size: 14px;
+            color: #ffffff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .pay-button:hover {
+            background-color: #218838;
+        }
+        .pay-button.pending {
+            background-color: #ffc107;
+            color: #000000;
+        }
+        .pay-button.paid {
+            background-color: #6c757d;
+            cursor: default;
+        }
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: #ffffff;
+            background-color: #0056b3;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            background-color: #003f7f;
+        }
+        .payment-dropdown {
+            padding: 5px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <button class="logo-btn" alt="Fitness Studio Logo" onclick="location.href='/';">Fitness Studio</button>
-        </div>
-        <nav class="navbar">
-            <a href="/calendar"><u>Calendar</u></a>
-            <a href="/enrollments"><u>Enrollments</u></a>
-            <a href="/payments"><u>Payments</u></a>
-            <a href="/about"><u>About Us</u></a>
-            <a href="/wallets" class="active"><u>Wallets</u></a>
-        </nav>
-        <div class="login">
-            <a href="login" class="login-link">
-                <img src="../static/Pictures/Account-icon.png" alt="LogIn Icon" class="login-image">
-                <span class="login-text"><u>Login</u></span>
-            </a>
-        </div>
-    </header>
     <div class="content">
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="Search clients" oninput="filterClients()">
         </div>
-        <table id="clientTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Client rows will be injected here -->
-            </tbody>
-        </table>
+        <div id="clientRecords" class="client-list"></div>
+        <div id="clientDetails" class="client-details">
+            <h2>Client Details</h2>
+            <p>Name: <span id="memberName"></span> <span id="memberSurname"></span></p>
+            <div id="classDetails"></div>
+            <button class="back-button" onclick="goBack()">Back</button>
+        </div>
     </div>
 
     <script>
-        // Dummy data for testing
-        const clients = [
-            { id: 1, firstName: "John", lastName: "Doe" },
-            { id: 2, firstName: "Jane", lastName: "Smith" },
-            { id: 3, firstName: "Michael", lastName: "Brown" },
-            { id: 4, firstName: "Emily", lastName: "Davis" }
-        ];
+        let clients = [];
+        const classes = {}; // Replace with your logic to dynamically fetch class data if needed
 
-        // Render the clients in the table
+        async function fetchClients() {
+            try {
+                const response = await fetch('https://api.example.com/clients'); // Replace with your API endpoint
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                clients = await response.json();
+
+                // Optionally, generate class data dynamically for demonstration
+                clients.forEach(client => {
+                    classes[client.id] = [
+                        { date: "2024-12-01", price: "$50", paid: Math.random() < 0.5 },
+                        { date: "2024-12-08", price: "$50", paid: Math.random() < 0.5 }
+                    ];
+                });
+
+                renderClients(clients);
+            } catch (error) {
+                console.error("Error fetching clients:", error);
+            }
+        }
+
         function renderClients(clientData) {
-            const tableBody = document.querySelector("#clientTable tbody");
-            tableBody.innerHTML = ""; // Clear the existing rows
+            const clientList = document.getElementById('clientRecords');
+            clientList.innerHTML = '';
             clientData.forEach(client => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${client.id}</td>
-                    <td>${client.firstName}</td>
-                    <td>${client.lastName}</td>
+                const clientItem = document.createElement('div');
+                clientItem.className = 'client-item';
+                clientItem.innerHTML = `
+                    <div class="client-avatar">
+                        ${client.firstName[0]}${client.lastName[0]}
+                    </div>
+                    <div>${client.firstName} ${client.lastName}</div>
                 `;
-                tableBody.appendChild(row);
+                clientItem.onclick = () => showClientDetails(client.id, client.firstName, client.lastName);
+                clientList.appendChild(clientItem);
             });
         }
 
-        // Filter clients based on search input
         function filterClients() {
             const query = document.getElementById("searchInput").value.toLowerCase();
             const filteredClients = clients.filter(client =>
-                client.firstName.toLowerCase().includes(query) || 
-                client.lastName.toLowerCase().includes(query)
+                client.firstName.toLowerCase().includes(query) || client.lastName.toLowerCase().includes(query)
             );
             renderClients(filteredClients);
         }
 
-        // Initial render
-        renderClients(clients);
+        function goBack() {
+            document.getElementById("clientRecords").style.display = "flex";
+            document.getElementById("clientDetails").style.display = "none";
+            document.getElementById("searchInput").style.display = "block";
+        }
+
+        // Fetch clients on page load
+        fetchClients();
     </script>
 </body>
 </html>
+{% endblock %}
