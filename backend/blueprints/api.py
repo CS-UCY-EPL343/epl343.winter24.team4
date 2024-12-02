@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, request, render_template, jsonify, sessio
 
 from scripts.payment.addPayment import addPayment
 from scripts.payment.selectPaymentTypes import PaymentTypes
-from scripts.selectAllUsers import getAllUsers,getUserClassesForMonth
+from scripts.selectAllUsers import getAllUsers,getUserClasses
 from scripts.user.addNewUser import AddNewUserToDb
 import bcrypt
 import re
@@ -11,13 +11,21 @@ api = Blueprint('api', __name__)
 
 
 @api.route('/api/logged_in', methods=['GET'])
-def isAdmin():
+def isLoggedIn():
     if 'user_id' in session:
         # Return JSON response with logged_in as True if 'user_id' exists in session
         return jsonify(logged_in=True)
     else:
         # Return JSON response with logged_in as False if 'user_id' does not exist in session
         return jsonify(logged_in=False)
+
+@api.route('/api/isAdmin', methods=['GET'])
+def isAdmin():
+    if 'user_id' in session:
+        if session['isAdmin']:
+            return jsonify(logged_in=True)
+
+    return jsonify(isAdmin=False)
 
 
 @api.route('/api/getAllUsers', methods=['GET'])
@@ -33,7 +41,7 @@ def getUsersClasses():
     if not 'user_id' in session:
             return jsonify({"error": "You are not logged in"})
     if session['isAdmin']:
-        return jsonify(getUserClassesForMonth(request.args.get('user_id')))
+        return jsonify(getUserClasses(request.args.get('user_id')))
 
 
 @api.route('/api/insertPayment', methods=['POST'])
@@ -69,3 +77,9 @@ def fetchPaymentType():
         return jsonify({"error": "You are not logged in"}), 401
     if session['isAdmin']:
         return jsonify(PaymentTypes())
+
+@api.route('/api/getCurrentUserClasses', methods=['GET'])
+def getCurrentUserClasses():
+    if not 'user_id' in session:
+            return jsonify({"error": "You are not logged in"})
+    return jsonify(getUserClasses(session['user_id']))

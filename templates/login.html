@@ -6,23 +6,48 @@
     <title>Email Login Page</title>
     <link rel="stylesheet" href="../static/logIn.css">
 </head>
+
 <body>
-    <h2>Login</h2>
-    <form action="/login" method="POST">
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
-        
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" required><br><br>
-        
-        <div class="button-container">
-            <a href="/signup">Register Now</a>
-            <button type="submit">Login</button>
+
+    
+
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Login</h1>
+            <form action="/login" method="POST">
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email" required><br><br>
+                
+                <label for="password">Password:</label><br>
+                <input type="password" id="password" name="password" required><br><br>
+                
+                <div class="button-container">
+                    <button type="submit">Login</button>
+                </div>
+
+                <div class="cancel-container">
+                    <button type="button" onclick="history.back()">Cancel</button>
+                </div>
+            </form>
+
+            {% if error %}
+            <div style="color: red; font-weight: bold;">
+                <p>{{ error }}</p>
+            </div>
+            {% endif %}
+
+            <div class="top-buttons">
+                <a href="/signup" class="register-btn">Register Now</a>
+                <a type="button" class="forgot-password-btn" disabled>Forgot Password</a>
+            </div>
         </div>
-        
-        <div class="cancel-container">
-            <button type="button" onclick="history.back()">Cancel</button>
+    </div>
+
+    <header>
+        <div class="logo">
+            <button class="logo-btn" alt="Fitness Studio Logo" onclick="location.href='/';"></button>
         </div>
-    </form>
+    </header>
+
 </body>
 </html>
