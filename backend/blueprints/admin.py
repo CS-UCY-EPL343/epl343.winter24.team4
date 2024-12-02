@@ -8,6 +8,7 @@ from scripts.addNewEnrollment import AddEnrollment
 from scripts.addNewClass import AddClass
 from scripts.selectClass import *
 from scripts.selectExerciseType import *
+from scripts.deleteClass import *
 from datetime import timedelta
 
 
@@ -87,3 +88,37 @@ def InsertClass():
     except Exception as e:
         # Catch any unexpected errors and return a 500 error response
         return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
+    
+    
+@admin.route('/api/admin/class/removeClass', methods=['POST'])
+def RemoveClass():
+    try:
+        # Check if the method is POST
+        if request.method == 'POST':
+            # Get JSON data from the POST request
+            data = request.get_json()
+
+            # Check if data is provided
+            if not data:
+                return jsonify({"error": "No data provided in the request body."}), 400
+
+            # Example: Validate required fields
+            required_fields = ["class_id"]
+            missing_fields = [field for field in required_fields if field not in data]
+
+            if missing_fields:
+                return jsonify({"error": f"Missing required fields: {', '.join(missing_fields)}"}), 400
+
+            #call procedure
+            if(DeleteClass(class_id=data["class_id"])):
+            # Return a success response
+                return jsonify({"status": "success", "message": "Class inserted successfully.", "data": data}), 201
+
+        # Handle non-POST methods
+        else:
+            return jsonify({"error": "Only POST requests are allowed."}), 405
+    except Exception as e:
+        # Catch any unexpected errors and return a 500 error response
+        return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
+        
+        
