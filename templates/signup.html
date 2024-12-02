@@ -8,42 +8,58 @@
     <script src="/static/signUp.js" defer></script>
 </head>
 <body>
+    <div class="hero">
+        <div class="hero-content">
+            <h2>User Registration</h2>
 
-    <h2>User Registration</h2>
+            <form id="registrationForm" action="/signup" method="POST">
+                <label for="FName">First Name:</label>
+                <input type="text" id="FName" name="FName" required><br><br>
 
-    <form id="registrationForm" action="/signup" method="POST">
-        <label for="FName">First Name:</label>
-        <input type="text" id="FName" name="FName" required><br><br>
+                <label for="LName">Last Name:</label>
+                <input type="text" id="LName" name="LName" required><br><br>
 
-        <label for="LName">Last Name:</label>
-        <input type="text" id="LName" name="LName" required><br><br>
+                <label for="Email">Email:</label>
+                <input type="email" id="Email" name="Email" required><br><br>
 
-        <label for="Email">Email:</label>
-        <input type="email" id="Email" name="Email" required><br><br>
+                <label for="Password">Password:</label>
+                <input type="password" id="Password" name="Password" required><br><br>
 
-        <label for="Password">Password:</label>
-        <input type="password" id="Password" name="Password" required><br><br>
+                <label for="ConfirmPassword">Confirm Password:</label>
+                <input type="password" id="ConfirmPassword" name="ConfirmPassword" required><br>
+                <span id="passwordMatchError" class="error-message"></span>
 
-        <label for="ConfirmPassword">Confirm Password:</label>
-        <input type="password" id="ConfirmPassword" name="ConfirmPassword" required><br>
-        <span id="passwordMatchError" class="error-message"></span><br><br>
+                <!-- Password Error Box for Criteria -->
+                <div id="passwordErrorBox" class="error-box" style="display: none;">
+                    <strong>Password must meet the following criteria:</strong>
+                    <ul id="passwordErrorList"></ul>
+                </div><br>
 
-        <!-- Password Error Box for Criteria -->
-        <div id="passwordErrorBox" class="error-box" style="display: none;">
-            <strong>Password must meet the following criteria:</strong>
-            <ul id="passwordErrorList"></ul>
-        </div><br>
+                <label for="Birthday">Birthday:</label>
+                <input type="date" id="Birthday" name="Birthday"><br><br>
 
-        <label for="Birthday">Birthday:</label>
-        <input type="date" id="Birthday" name="Birthday"><br><br>
+                <label for="Phone">Phone:</label>
+                <input type="text" id="Phone" name="Phone"><br><br>
 
-        <label for="Phone">Phone:</label>
-        <input type="text" id="Phone" name="Phone"><br><br>
+                <!-- Error Message if available -->
+                {% if error %}
+                <div style="color: red; font-weight: bold;">
+                    <p>{{ error }}</p>
+                </div>
+                {% endif %}
 
-        <div class="button-container">
-            <button type="submit" class="submit-button" id="submitButton" disabled>Submit</button>
-            <button type="button" class="cancel-button" onclick="history.back()">Cancel</button>
+                <div class="button-container">
+                    <button type="submit" class="submit-button" id="submitButton" disabled>Submit</button>
+                    <button type="button" class="cancel-button" onclick="history.back()">Cancel</button>
+                </div>
+                
+            </form>
         </div>
-    </form>
+    </div>
+    <header>
+        <div class="logo">
+            <button class="logo-btn" alt="Fitness Studio Logo" onclick="location.href='/';"></button>
+        </div>
+    </header>
 </body>
 </html>
