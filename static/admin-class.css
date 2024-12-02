@@ -9,6 +9,7 @@ body {
 .calendar {
     padding: 20px;
     margin-top: 150px;
+    background-color: #69696981;
 }
 
 .day {
@@ -124,6 +125,7 @@ color: rgb(171, 252, 41);
     padding: 5px;
     background-color: rgb(74, 74, 74);
     color: white;
+    cursor: pointer;
 }
 
 .add-class-form button:hover {
@@ -135,6 +137,7 @@ color: rgb(171, 252, 41);
     padding: 5px;
     background-color: rgb(26, 26, 26);
     color: white;
+    cursor: pointer;
 }
 
 .add-class:hover {
@@ -156,6 +159,7 @@ color: rgb(171, 252, 41);
     padding: 5px;
     background-color: rgb(74, 74, 74);
     color: white;
+    cursor: pointer;
 }
 
 .remove-class:hover {
@@ -207,3 +211,65 @@ color: rgb(171, 252, 41);
 .add-class:hover, .view-students:hover {
     color: rgb(171, 252, 41);
 }
+
+/* Form container styling for layout */
+.student-form-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/* Add button styling */
+.add {
+    border: none;
+    padding: 5px;
+    background-color: rgb(0, 0, 0);
+    color: white;
+    cursor: pointer;
+}
+
+.add:hover {
+    color: rgb(171, 252, 41);
+}
+
+.remove-student {
+    border: none;
+    padding: 5px;
+    background-color: black;
+    color: rgb(255, 255, 255);
+    cursor: pointer; /* Ensure it looks clickable */
+}
+
+.remove-student:hover {
+    color: rgb(171, 252, 41);
+}
+
+.view-students {
+    border: none;
+    padding: 5px;
+    background-color: rgb(26, 26, 26);
+    color: white;
+    cursor: pointer; /* Makes the cursor a pointer */
+}
+
+.view-students:hover {
+    color: rgb(171, 252, 41);
+}
+
+.close {
+    color: white; /* Default color */
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    border: none;
+    background: none; /* Remove any background */
+    cursor: pointer; /* Make it look clickable */
+}
+
+.close:hover,
+.close:focus {
+    color: rgb(171, 252, 41); /* Change to greenish color on hover */
+    text-decoration: none; /* Ensure no underline */
+}
+

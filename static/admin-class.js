@@ -51,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const day = this.parentElement;
             const dropdown = day.querySelector('.dropdown-content');
 
-            // Toggle the current dropdown independently
             dropdown.classList.toggle('show');
             this.classList.toggle('rotate');
             day.classList.toggle('active');
@@ -86,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const classItem = document.createElement('div');
             classItem.classList.add('class-item');
-            const studentListId = `student-list-${Date.now()}`; // Unique ID for the student list
+            const studentListId = `student-list-${Date.now()}`;
             classItem.innerHTML = `
                 <p>Hours: ${hours}</p>
                 <p>Description: ${description}</p>
@@ -94,41 +93,50 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p>Capacity: ${capacity}</p>
                 <button class="remove-class">Remove</button>
                 <button class="view-students" data-student-list="${studentListId}">View Students</button>
-                <div id="${studentListId}" class="student-list" style="display: none;">
-                    <!-- Student list specific to this class -->
-                </div>
+                <div id="${studentListId}" class="student-list" style="display: none;"></div>
             `;
 
-            // Remove button logic
             classItem.querySelector('.remove-class').addEventListener('click', () => {
                 classItem.remove();
                 adjustDropdownHeight(container.closest('.dropdown-content'));
             });
 
-            // View Students button logic
             classItem.querySelector('.view-students').addEventListener('click', (event) => {
                 const studentListId = event.target.getAttribute('data-student-list');
                 const studentList = document.getElementById(studentListId);
-
-                // Show modal
                 const modal = document.getElementById('view-students-modal');
                 modal.style.display = 'block';
 
-                // Attach current student list to modal
                 const modalStudentList = document.getElementById('student-list');
                 modalStudentList.innerHTML = studentList.innerHTML;
 
-                // Add student button logic in modal
-                const addStudentButton = document.getElementById('add-student');
-                addStudentButton.onclick = () => {
-                    const studentName = prompt("Enter the student's name:");
+                modalStudentList.querySelectorAll('.remove-student').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const studentElement = button.parentElement;
+                        const studentName = studentElement.textContent.trim();
+                        studentElement.remove();
+                        const matchingStudent = [...studentList.children].find(child => child.textContent.trim() === studentName);
+                        if (matchingStudent) matchingStudent.remove();
+                    });
+                });
+
+                const studentForm = document.getElementById('student-form');
+                const studentNameInput = document.getElementById('student-name');
+
+                studentForm.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    const studentName = studentNameInput.value.trim();
                     if (studentName) {
                         const studentItem = document.createElement('p');
-                        studentItem.textContent = studentName;
-                        studentList.appendChild(studentItem); // Add to the specific student list
-                        modalStudentList.appendChild(studentItem.cloneNode(true)); // Sync with modal
+                        studentItem.innerHTML = `${studentName} <button class="remove-student">X</button>`;
+                        studentList.appendChild(studentItem);
+                        const modalStudentItem = studentItem.cloneNode(true);
+                        modalStudentList.appendChild(modalStudentItem);
+                        attachRemoveLogic(studentItem);
+                        attachRemoveLogic(modalStudentItem);
+                        studentNameInput.value = '';
                     }
-                };
+                });
             });
 
             container.appendChild(classItem);
@@ -152,6 +160,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function attachRemoveLogic(studentItem) {
+        const removeButton = studentItem.querySelector('.remove-student');
+        removeButton.classList.add('remove-student'); // Ensure the button has the correct class
+        removeButton.addEventListener('click', () => {
+            const studentName = studentItem.textContent.trim();
+            studentItem.remove();
+            // Remove from other lists if needed
+            const matchingStudent = [...document.querySelectorAll(`#${studentItem.id}`)]
+                .find(student => student.textContent.trim() === studentName);
+            if (matchingStudent) matchingStudent.remove();
+        });
+    }    
+
     addClassButtons.forEach((button) => {
         button.addEventListener('click', () => {
             const day = button.dataset.day;
@@ -159,17 +180,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Modal close logic
     const modal = document.getElementById('view-students-modal');
     const closeModal = modal.querySelector('.close');
 
     closeModal.addEventListener('click', () => {
-        modal.style.display = 'none'; // Hide the modal
+        modal.style.display = 'none';
     });
 
     window.addEventListener('click', (event) => {
         if (event.target === modal) {
-            modal.style.display = 'none'; // Hide the modal
+            modal.style.display = 'none';
         }
     });
 });

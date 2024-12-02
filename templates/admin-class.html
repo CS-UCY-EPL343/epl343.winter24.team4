@@ -88,10 +88,16 @@
     <div class="modal-content">
       <span class="close">&times;</span>
       <h2>Students</h2>
-      <button id="add-student">Add Student</button>
+      <div class="student-form-container">
+        <form id="student-form">
+          <input type="text" id="student-name" placeholder="Student Name" required>
+          <button type="submit" class="add">Add</button>
+        </form>
+      </div>
       <div id="student-list"></div>
     </div>
-  </div>
+  </div>  
+  
 </body>
 {% endblock %}
 
