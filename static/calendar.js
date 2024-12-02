@@ -180,6 +180,34 @@ function clearClassBoxes() {
     classBoxes.forEach(box => box.remove());
 }
 
+async function isEnrolled(classId) {
+    try {
+        // Send the GET request
+        const response = await fetch(`/isenrolled?class_id=${classId}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        // Ensure response status is OK
+        if (!response.ok) {
+            console.error("Server Error:", response.status, response.statusText);
+            return false;
+        }
+
+        // Parse the JSON response
+        const data = await response.json();
+
+        // Return the isEnrolled value as a boolean
+        return Boolean(data.isEnrolled);
+    } catch (error) {
+        console.error("Fetch Error:", error);
+        return false;
+    }
+}
+
+
+
+
 function showModal(classItem) {
     const modal = document.getElementById("enrollModal");
     const classDetails = document.getElementById("classDetails");
@@ -192,6 +220,16 @@ function showModal(classItem) {
         Price: €${classItem.Price}<br>
         Remaining Capacity: ${classItem.Remaining_Capacity}
     `;
+    
+    (async () => {
+        const enrolled = await isEnrolled(classItem.Class_ID);
+    
+        if (enrolled) {
+            enrollBtn.style.display = "none";
+        } else {
+            enrollBtn.style.display = "block";
+        }
+    })();
 
     modal.style.display = "block";
 
@@ -217,6 +255,7 @@ function showModal(classItem) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             closeModal();
+            enrollBtn.style.display = "none";
             return response.json();    
         })
         .catch(error => {

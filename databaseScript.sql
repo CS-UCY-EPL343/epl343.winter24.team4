@@ -47,7 +47,6 @@ CREATE TABLE Payment_Type (
 
 CREATE TABLE Payment (
     [Payment_ID] INT IDENTITY,
-    [Amount] SMALLMONEY NOT NULL,
     [Payment_Datetime] DATETIME NOT NULL DEFAULT GETDATE(),
     [User_ID] INT NOT NULL,
     [Payment_Type_ID] INT NOT NULL,

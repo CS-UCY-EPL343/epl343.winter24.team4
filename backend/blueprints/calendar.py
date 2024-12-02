@@ -2,6 +2,7 @@ from scripts.addNewEnrollment import AddEnrollment
 from scripts.addNewClass import AddClass
 from scripts.selectClass import *
 from scripts.selectExerciseType import *
+from scripts.getClassEnrollments import *
 from datetime import timedelta
 from flask import Blueprint, request, render_template, jsonify, session, redirect, url_for
 
@@ -11,7 +12,7 @@ calendar = Blueprint('calendar', __name__)
 def calendarRender():
     if request.method == 'GET':
         if(not 'user_id' in session):
-                return(redirect(url_for('main.home')))
+                return(redirect(url_for('auth.login')))
         # Check for query parameters for start and end dates (optional)
         start_date_str = request.args.get('start_date')
         end_date_str = request.args.get('end_date')
@@ -108,3 +109,30 @@ def add_class():
 @calendar.route('/enrollments',  methods=['GET', 'POST'])
 def enrollments():
     return render_template('enrollments.html')
+
+
+@calendar.route('/isenrolled', methods=['GET'])
+def isEnrolled():
+    try:
+        user_id = session.get('user_id')  
+        if not user_id:
+            return jsonify({"error": "User not logged in."}), 401
+
+        class_id = request.args.get('class_id')  
+        if not class_id:
+            return jsonify({"error": "class_id parameter is missing."}), 400
+
+       
+        result = getClassEnrollments(class_id)
+        if not result:
+            return jsonify({"isEnrolled": False})  
+        
+        is_enrolled = any(enrollment.get("User_ID") == int(user_id) for enrollment in result)
+
+       
+        return jsonify({"isEnrolled": is_enrolled})
+
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
+
