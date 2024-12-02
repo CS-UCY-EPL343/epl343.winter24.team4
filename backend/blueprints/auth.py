@@ -56,11 +56,11 @@ def login():
                     session['isAdmin'] = user[0].get('isAdmin') 
                     return redirect(url_for('main.home'))
                 else:
-                    return jsonify({"message": "Invalid email or password"}), 401
+                    return render_template('/login.html', error="Invalid email or password."), 401
             else:
-                return jsonify({"message": "Password not found for this user"}), 400
+                return render_template('/login.html', error="Password not found for this user."), 400
         else:
-            return jsonify({"message": "User not found"}), 404
+            return render_template('/login.html', error="User not found."), 404
 
     elif request.method == 'GET':
         if 'user_id' in session:  # Check if the user is already logged in
