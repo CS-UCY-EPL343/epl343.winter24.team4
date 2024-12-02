@@ -3,7 +3,7 @@ from scripts.user.addNewUser import AddNewUserToDb
 import bcrypt
 import re
 
-
+from scripts.user.changeUserData import changePassword, getInfoFromUserId, changeEmail
 from scripts.user.checkUserCredentials import checkUserCredentials
 
 auth = Blueprint('auth', __name__)
@@ -113,4 +113,48 @@ def signup():
 def logout():
     session.clear()
     return redirect(url_for('auth.login'))  # Redirect to login page after logout
+
+
+@auth.route('/profile',methods=['GET', 'POST'])
+def profile():
+    if not 'user_id' in session:
+        return redirect(url_for('main.login'))
+    if request.method == 'GET':
+        return render_template("profile.html")
+    if request.method == 'POST':
+        old_password = request.form.get('old-password')
+        new_password = request.form.get('new-password')
+        new_email = request.form.get('new-email')
+        if new_password:
+            user = getInfoFromUserId(session['user_id'])
+            if user:
+                stored_password = user[0].get("Password") if isinstance(user, list) else user.get("Password")
+                if stored_password:
+                    # Check if the password matches
+                    if check_password(old_password, stored_password):
+                        changePassword(hash_password(new_password), session['user_id'])
+                        return render_template("profile.html", passworderror="Succesfully changed password.")
+                    else:
+                        return render_template('profile.html', passworderror="Wrong old password"), 401
+                else:
+                    return render_template('profile.html', passworderror="Password not found for this user."), 400
+            else:
+                return render_template('profile.html', passworderror="User not found."), 404
+        elif new_email:
+            user = getInfoFromUserId(session['user_id'])
+            if user:
+                stored_password = user[0].get("Password") if isinstance(user, list) else user.get("Password")
+                if stored_password:
+                    # Check if the password matches
+                    if check_password(old_password, stored_password):
+                        changeEmail(new_email, session['user_id'])
+                        return render_template("profile.html", emailerror="Succesfully changed Email.")
+                    else:
+                        return render_template('profile.html', emailerror="Wrong old password"), 401
+                else:
+                    return render_template('profile.html', emailerror="Password not found for this user."), 400
+            else:
+                return render_template('profile.html', emailerror="User not found."), 404
+
+
 

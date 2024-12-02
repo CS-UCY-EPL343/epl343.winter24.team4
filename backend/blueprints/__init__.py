@@ -1,3 +1,4 @@
+from .enrollment import enrollment
 from .main import main
 from .calendar import calendar
 from .auth import auth
@@ -14,4 +15,5 @@ def register_blueprints(app):
     app.register_blueprint(payment)
     app.register_blueprint(admin)
     app.register_blueprint(api)
+    app.register_blueprint(enrollment)
     

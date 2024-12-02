@@ -12,7 +12,7 @@ def getAllUsers():
     return execute_query_dict(query)
 
 
-def getUserClassesForMonth(user_identifier):
+def getUserClasses(user_identifier):
     """
     Fetches the classes for a specific user and month.
 
