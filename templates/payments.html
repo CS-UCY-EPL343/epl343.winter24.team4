@@ -1,0 +1,173 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Enrollments</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: transparent;
+        }
+        .content {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            width: 700px;
+            align-items: flex-start;
+            background-color: transparent;
+            border-radius: 12px; /* Softer corners */
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
+            margin-top: 50px;
+        }
+        h2 {
+            color: #333333; /* Darker text for better readability */
+            font-size: 24px;
+            margin-bottom: 20px; /* Add spacing below the heading */
+            text-align: center;
+            width: 100%;
+        }
+        .class-table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+            background-color: transparent;
+            border: transparent;
+        }
+        .class-table th,
+        .class-table td {
+            border: 1px solid #ddd;
+            padding: 12px 15px; /* More padding for better spacing */
+            text-align: left;
+        }
+        .class-table th {
+            background-color: #7FFF00; /* Updated green header color */
+            color: #000000; /* Changed header text color to black */
+            font-weight: 600;
+        }
+        .class-table td {
+            color: #333333; /* Darker text for readability */
+            font-size: 14px;
+        }
+        .class-table tr {
+            background-color: #f9f9f9; /* Light hover effect for rows */
+        }
+        .class-table tr:hover {
+            background-color: #f9f9f9; /* Light hover effect for rows */
+        }
+        .pay-button {
+            padding: 8px 16px; /* Larger button for better accessibility */
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #7FFF00; /* Updated green button color */
+            border: none;
+            border-radius: 8px; /* Softer corners for the button */
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+        .pay-button:hover {
+            background-color: #6ee000; /* Slightly darker green for hover */
+        }
+        .month-header {
+            background-color: #e9ecef; /* Light gray */
+            font-weight: bold;
+            text-align: center; /* Center text horizontally */
+            padding: 15px;
+            font-size: 16px;
+            color: #000000; /* Black text */
+            text-align: center; /* Ensure text is horizontally centered */
+            vertical-align: middle; /* Ensure text is vertically centered */
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h2>User Enrollments</h2>
+        <table class="class-table" id="classTable">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time Start</th>
+                    <th>Time End</th>
+                    <th>Price (€)</th>
+                    <th>Pay</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Class details will be injected here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function fetchUserEnrollments() {
+            try {
+                const response = await fetch('/api/getCurrentUserClasses'); // Updated API endpoint
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const classData = await response.json();
+                if (classData.error) {
+                    console.error("Error fetching user enrollments:", classData.error);
+                    return;
+                }
+                renderClassDetails(classData);
+            } catch (error) {
+                console.error("Error fetching user enrollments:", error);
+            }
+        }
+
+        function renderClassDetails(classes) {
+            const classTableBody = document.querySelector("#classTable tbody");
+            classTableBody.innerHTML = '';
+
+            const groupedClasses = classes.reduce((acc, cls) => {
+                const month = new Date(cls.Class_Date).toLocaleString('default', { month: 'long', year: 'numeric' });
+                if (!acc[month]) acc[month] = [];
+                acc[month].push(cls);
+                return acc;
+            }, {});
+
+            for (const [month, monthClasses] of Object.entries(groupedClasses)) {
+                const monthHeaderRow = document.createElement("tr");
+                monthHeaderRow.innerHTML = `
+                    <td colspan="5" class="month-header">${month}</td>
+                `;
+                classTableBody.appendChild(monthHeaderRow);
+
+                monthClasses.forEach(cls => {
+                    const row = document.createElement("tr");
+                    const formattedStartTime = cls.Time_start.substring(0, 5);
+                    const formattedEndTime = cls.Time_end.substring(0, 5);
+                    row.innerHTML = `
+                        <td>${cls.Class_Date}</td>
+                        <td>${formattedStartTime}</td>
+                        <td>${formattedEndTime}</td>
+                        <td>${cls.Price.toFixed(2)} €</td>
+                        <td><button class="pay-button" onclick="showComingSoon()">Pay</button></td>
+                    `;
+                    classTableBody.appendChild(row);
+                });
+            }
+        }
+
+        function showComingSoon() {
+            alert("This functionality will be implemented soon.");
+        }
+
+        // Fetch user enrollments on page load
+        fetchUserEnrollments();
+    </script>
+</body>
+</html>
+{% endblock %}
