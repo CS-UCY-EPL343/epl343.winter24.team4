@@ -41,7 +41,7 @@ def getUserClasses(user_identifier):
     LEFT JOIN 
         Payment p ON e.User_ID = p.User_ID AND e.Class_ID = p.Class_ID
     WHERE 
-        e.User_ID = :userid; 
+        e.User_ID = :userid and c.Date<getDate(); 
 
     """
 

@@ -1,4 +1,6 @@
 from flask import session, url_for
+
+from scripts.deleteClass import DeleteClass
 from scripts.user.addNewUser import AddNewUserToDb
 from .auth import is_admin
 from flask import Blueprint, redirect, request, render_template
@@ -88,37 +90,31 @@ def InsertClass():
     except Exception as e:
         # Catch any unexpected errors and return a 500 error response
         return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
-    
-    
+
+
 @admin.route('/api/admin/class/removeClass', methods=['POST'])
-def RemoveClass():
+def removeClass():
+    if 'user_id' not in session:
+        return jsonify({"error": "You must be logged in to perform this action."}), 401
+
+    if not session["isAdmin"]:
+        return jsonify({"error": "You must be an admin to remove a class."}), 403
+
     try:
-        # Check if the method is POST
-        if request.method == 'POST':
-            # Get JSON data from the POST request
-            data = request.get_json()
-            print(data)
-            # Check if data is provided
-            if not data:
-                print("afcacvaevdeads!")
-                return jsonify({"error": "No data provided in the request body."}), 400
-            
+        # Get the class_id from the request
+        data = request.get_json()
+        class_id = data.get("class_id")
 
-            # Example: Validate required fields
-            required_fields = ["class_id"]
-            missing_fields = [field for field in required_fields if field not in data]
+        if not class_id:
+            return jsonify({"error": "class_id is required."}), 400
 
-            if missing_fields:
-                return jsonify({"error": f"Missing required fields: {', '.join(missing_fields)}"}), 400
+        # Call your function to delete the class by class_id
+        success = DeleteClass(class_id)  # Make sure DeleteClass is defined properly
 
-            #call procedure
-            if(DeleteClass(class_id=data["class_id"])):
-            # Return a success response
-                return jsonify({"status": "success", "message": "Class inserted successfully.", "data": data}), 201
+        if success:
+            return jsonify({"message": "Class removed successfully."}), 200
         else:
-            return jsonify({"error": "Only POST requests are allowed."}), 405
+            return jsonify({"error": "Failed to remove class."}), 500
+
     except Exception as e:
-        # Catch any unexpected errors and return a 500 error response
         return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
-        
-        
