@@ -357,7 +357,7 @@ function populateWeekDates(startOfWeek) {
 }
 
 
-function handleAddClass(day) {
+async function handleAddClass(day) {
     const container = document.getElementById(`${day}-classes`);
     const addClassButton = document.querySelector(`.add-class[data-day="${day}"]`);
 
@@ -387,10 +387,7 @@ function handleAddClass(day) {
         
         <label for="ex_id">Exercise Type:</label>
         <select name="ex_id" required>
-            <option value="1">Yoga</option>
-            <option value="2">Dance</option>
-            <option value="3">Pilates</option>
-            <option value="4">Zumba</option>
+            <option value="" disabled selected>Loading...</option>
         </select>
         
         <button type="submit">Add Class</button>
@@ -398,6 +395,37 @@ function handleAddClass(day) {
     `;
 
     container.appendChild(form);
+
+    const selectDropdown = form.querySelector('select[name="ex_id"]');
+    
+    // Fetch exercise types from the endpoint
+    try {
+        const response = await fetch('/api/getExerciseTypes');
+        if (response.ok) {
+            const jsonResponse = await response.json(); // Parse the outer JSON
+            console.log('Exercise Types Raw Response:', jsonResponse);
+    
+            // Parse the `types` string into a JSON object
+            const exerciseTypes = JSON.parse(jsonResponse.types);
+    
+            console.log('Parsed Exercise Types:', exerciseTypes);
+    
+            selectDropdown.innerHTML = ''; // Clear loading option
+    
+            // Iterate over the parsed array
+            exerciseTypes.forEach((type) => {
+                const option = document.createElement('option');
+                option.value = type.Ex_ID;
+                option.textContent = type.Name;
+                selectDropdown.appendChild(option);
+            });
+        } else {
+            throw new Error('Failed to load exercise types');
+        }
+    } catch (error) {
+        console.error('Error fetching exercise types:', error);
+        selectDropdown.innerHTML = '<option value="" disabled>Error loading types</option>';
+    }
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -438,6 +466,7 @@ function handleAddClass(day) {
         addClassButton.style.display = 'block'; // Show the "Add Class" button again
     });
 }
+
 
 
 function adjustDropdownHeight(dropdown) {

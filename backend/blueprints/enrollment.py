@@ -4,6 +4,7 @@ from scripts.selectClass import *
 from scripts.selectExerciseType import *
 from scripts.selectEnrollments import *
 from scripts.deleteEnrollment import *
+from scripts.selectExerciseType import *
 from datetime import timedelta
 from flask import Blueprint, request, render_template, jsonify, session, redirect, url_for
 
@@ -71,3 +72,25 @@ def deleteEnrollment():
     except Exception as e:
         # Handle any other unexpected errors
         return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
+    
+@enrollment.route('/api/getExerciseTypes',  methods=['GET'])
+def getExerciseTypes():
+
+    result = GetAllExerciseTypes()
+
+    if not result:
+            return jsonify({"message": "No enrollments found for the user."}), 404
+
+    if isinstance(result, str) and "error" in result.lower():
+        return jsonify({"error": result}), 500  # Custom error from SelectUserEnrollments
+
+        # Successfully retrieved enrollments
+    return jsonify({"types": result}), 200
+
+
+
+
+
+
+
+    
