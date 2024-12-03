@@ -97,10 +97,11 @@ def RemoveClass():
         if request.method == 'POST':
             # Get JSON data from the POST request
             data = request.get_json()
-
+            print(data)
             # Check if data is provided
             if not data:
                 return jsonify({"error": "No data provided in the request body."}), 400
+            
 
             # Example: Validate required fields
             required_fields = ["class_id"]
@@ -113,8 +114,6 @@ def RemoveClass():
             if(DeleteClass(class_id=data["class_id"])):
             # Return a success response
                 return jsonify({"status": "success", "message": "Class inserted successfully.", "data": data}), 201
-
-        # Handle non-POST methods
         else:
             return jsonify({"error": "Only POST requests are allowed."}), 405
     except Exception as e:

@@ -1,4 +1,4 @@
-window.onload = function() {
+document.addEventListener('DOMContentLoaded', () => {
     const prevWeekButton = document.querySelector('.prev-week');
     const nextWeekButton = document.querySelector('.next-week');
     
@@ -65,7 +65,7 @@ window.onload = function() {
             modal.style.display = 'none';
         }
     });
-};
+});
 
 function clearClassBoxes() {
     const classBoxes = document.querySelectorAll('.class-item');
@@ -124,7 +124,7 @@ function populateClasses(data) {
                 <div id="${studentListId}" class="student-list" style="display: none;"></div>
             `;
 
-
+           
             const button1 = classItem.querySelector('.remove-class');
             if(button1){
                 button1.addEventListener('click', () => {

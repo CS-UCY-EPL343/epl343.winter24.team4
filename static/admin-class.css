@@ -99,7 +99,7 @@ color: rgb(171, 252, 41);
 
 #week-dates {
     flex-grow: 1; /* Ensures the date header takes up available space */
-    text-align: center; /* Centers the week dates */
+    text-align: center; /* Centers the week dates */    
 }
 
 .add-class-form select {
@@ -285,3 +285,20 @@ color: rgb(171, 252, 41);
     text-decoration: none; /* Ensure no underline */
 }
 
+.add-class-form div {
+    margin-bottom: 15px; /* Adds spacing between elements */
+}
+
+.add-class-form label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.add-class-form input[type="time"] {
+    display: block;
+    padding: 5px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
