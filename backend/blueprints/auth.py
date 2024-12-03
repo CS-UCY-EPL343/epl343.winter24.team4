@@ -159,5 +159,8 @@ def profile():
     return render_template("profile.html", error="Invalid request method.")
 
 
-
-
+@auth.route('/getProfile',methods=['GET'])
+def getprofile():
+    user = getInfoFromUserId(session['user_id'])
+    if user:
+        return jsonify(user)
