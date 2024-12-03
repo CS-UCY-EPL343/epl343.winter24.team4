@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="../static/profile.css">
 <script src="../static/profile.js"></script>
 
+<script>profileInfo()</script>
 <body>
   <div class="container">
     <div class="menu">
@@ -18,7 +19,7 @@
         <div id="profile-info" class="content-box">
             <h2>Profile Information</h2>
             <p>Welcome! Here is your profile information.</p>
-            <p id="fname"><strong>First Name:</strong> </p>
+            <p id="fname"> </p>
             <p id="lname"><strong>Last Name:</strong> </p>
             <p id="email"><strong>Email:</strong> </p>
             <p id="birthday"><strong>Birthday:</strong> </p>
@@ -57,7 +58,7 @@
           <label for="new-email">New Email:</label>
           <input type="email" id="new-email" name="new-email"  required>
           <label for="old-password">Password For Approval:</label>
-          <input type="password" id="old-password" name="old-password" required>
+          <input type="password" id="password" name="old-password" required>
           <button type="submit">Update Email</button>
           {% if emailerror %}
                 <script>
@@ -70,7 +71,7 @@
       </div>
     </div>
   </div>
-  <script src="script.js"></script>
+
 </body>
 
 

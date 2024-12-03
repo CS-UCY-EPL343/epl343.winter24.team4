@@ -103,10 +103,10 @@ function profileInfo() {
 
 function getInfo(data) {
     // Ensure the data structure matches your API response
-    document.getElementById('fname').innerHTML = `<strong>First Name:</strong> ${data.FName || 'N/A'}`;
-    document.getElementById('lname').innerHTML = `<strong>Last Name:</strong> ${data.LName || 'N/A'}`;
-    document.getElementById('email').innerHTML = `<strong>Email:</strong> ${data.Email || 'N/A'}`;
-    document.getElementById('birthday').innerHTML = `<strong>Birthday:</strong> ${data.Birthday || 'N/A'}`;
-    document.getElementById('phone').innerHTML = `<strong>Phone:</strong> ${data.Phone || 'N/A'}`;
+    document.getElementById('fname').innerHTML = `<strong>First Name:</strong> ${data[0].FName }`;
+    document.getElementById('lname').innerHTML = `<strong>Last Name:</strong> ${data[0].Lname}`;
+    document.getElementById('email').innerHTML = `<strong>Email:</strong> ${data[0].Email}`;
+    document.getElementById('birthday').innerHTML = `<strong>Birthday:</strong> ${data[0].Birthday }`;
+    document.getElementById('phone').innerHTML = `<strong>Phone:</strong> ${data[0].Phone}`;
 }
 
