@@ -1,4 +1,4 @@
-window.onload = function() {
+document.addEventListener('DOMContentLoaded', () => {
     const prevWeekButton = document.querySelector('.prev-week');
     const nextWeekButton = document.querySelector('.next-week');
 
@@ -12,6 +12,8 @@ window.onload = function() {
     thisWeekClasses(formattedMonday, formattedSunday)
             .then(data => {
                 console.log('Classes this week:', data);
+
+
             })
             .catch(error => {
                 console.error('Error fetching classes:', error);
@@ -48,7 +50,6 @@ window.onload = function() {
 
     addClassButtons.forEach((button) => {
         button.addEventListener('click', () => {
-            //add here the fetch
             const day = button.dataset.day;
             handleAddClass(day);
         });
@@ -66,7 +67,7 @@ window.onload = function() {
             modal.style.display = 'none';
         }
     });
-};
+});
 
 function clearClassBoxes() {
     const classBoxes = document.querySelectorAll('.class-item');
@@ -75,6 +76,9 @@ function clearClassBoxes() {
 
 function thisWeekClasses(startDate, endDate) {
     const apiUrl = '/admin/admin-class';
+
+    console.log(startDate);
+    console.log(endDate);
 
     return fetch(`${apiUrl}?start_date=${startDate}&end_date=${endDate}`)
         .then(response => {
@@ -101,65 +105,37 @@ function populateClasses(data) {
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Reset time for accurate comparison
 
-            const classItem = document.createElement('div');
-            classItem.classList.add('class-item');
-            
-            // Create unique ID for student list
-            const studentListId = `student-list-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-            
-            const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
-
-            classItem.innerHTML = `
-                <p>Hours: ${classInfo.Time_start} - ${classInfo.Time_end}</p>
-                <p>Class Type: ${classInfo.Exercise_Type}</p>
-                <p>Capacity: ${classInfo.Remaining_Capacity}/${classInfo.Max_capacity}</p>
-                <p>Price: ${classInfo.Price}/${classInfo.Price}</p>
-                ${
-                    classInfo.Date >= today
-                    ? `<button class="remove-class" id="${classInfo.Class_ID}">Remove</button>`
-                    : ""
-                }
-                <button class="view-students" data-student-list="${studentListId}">View Students</button>
-                <div id="${studentListId}" class="student-list" style="display: none;"></div>
-            `;
         const dayContainer = document.getElementById(`${days[classDay.getDay()]}-classes`);
 
         const classItem = document.createElement('div');
         classItem.classList.add('class-item');
 
-            const button1 = classItem.querySelector('.remove-class');
-            if(button1){
-                button1.addEventListener('click', () => {
-                    const Class_ID = button1.id;
-                    const data = { class_id: Class_ID };
-                    const apiUrl = '/api/admin/class/removeClass';
-                    return fetch(apiUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data)
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        else
-                        {
-                            location.reload();
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error removing the class:', error);
+        const studentListId = `student-list-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-                    });
-                });
-            }
+        classItem.innerHTML = `
+            <p>Hours: ${classInfo.Time_start} - ${classInfo.Time_end}</p>
+            <p>Class Type: ${classInfo.Exercise_Type}</p>
+            <p>Capacity: ${classInfo.Remaining_Capacity}/${classInfo.Max_capacity}</p>
+            <button class="remove-class">Remove</button>
+            <button class="view-students" data-student-list="${studentListId}">View Students</button>
+            <div id="${studentListId}" class="student-list" style="display: none;"></div>
+        `;
 
-            classItem.querySelector('.view-students').addEventListener('click', (event) => {
-                const studentList = document.getElementById(event.target.getAttribute('data-student-list'));
-                const modal = document.getElementById('view-students-modal');
-                modal.style.display = 'block';
+        // Hide the remove button if the class date has passed
+        const removeButton = classItem.querySelector('.remove-class');
+        if (classDay < today) {
+            removeButton.style.display = 'none';
+        } else {
+            removeButton.addEventListener('click', () => {
+                classItem.remove();
+                adjustDropdownHeight(dayContainer.closest('.dropdown-content'));
+            });
+        }
+
+        classItem.querySelector('.view-students').addEventListener('click', (event) => {
+            const studentList = document.getElementById(event.target.getAttribute('data-student-list'));
+            const modal = document.getElementById('view-students-modal');
+            modal.style.display = 'block';
 
             const modalStudentList = document.getElementById('student-list');
             modalStudentList.innerHTML = studentList.innerHTML;
@@ -368,16 +344,9 @@ function adjustDropdownHeight(dropdown) {
     }
 }
 
-//idk
 function attachRemoveLogic(studentItem) {
     const removeButton = studentItem.querySelector('.remove-student');
     removeButton.addEventListener('click', () => {
         studentItem.remove();
     });
-}
-
-function getAddedClassDate(button) {
-    const dayElement = button.closest('.day');
-    const addedClassDate = dayElement.dataset.date;
-    return addedClassDate;
 }
