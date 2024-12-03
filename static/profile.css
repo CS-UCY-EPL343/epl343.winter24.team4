@@ -1,0 +1,277 @@
+/* Updated CSS for full-screen layout */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+  }
+  
+  .container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    margin-top: 101px;
+  }
+  
+  .menu {
+    width: 250px; /* Fixed width for the menu */
+    background: #363636ac;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+  }
+  
+  .menu ul li {
+    padding: 15px;
+    cursor: pointer;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    transition: background 0.3s;
+  }
+  
+  .menu ul li.active,
+  .menu ul li:hover {
+    background: rgb(171, 252, 41);
+    font-weight: bold;
+    color: black;
+  }
+  
+  .content {
+    flex: 1; /* Fills the remaining space */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #414141ac;
+  }
+  
+  .content-box {
+    display: none;
+    width: 80%; /* Centralize the content box */
+    max-width: 600px;
+    text-align: center;
+  }
+  
+  .content-box.hidden {
+    display: none;
+  }
+  
+  .content-box:not(.hidden) {
+    display: block;
+  }
+
+  #logout-menu {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+    font-size: 16px;
+    color: #fffcfc;
+    transition: transform 0.3s ease, color 0.3s ease;
+    
+  }
+  
+  #logout-menu:hover {
+    color: rgba(230, 43, 43, 0.826);
+    transform: scale(1.1); /* Slight zoom effect for the button */
+  }
+  
+  #logout-menu:focus {
+    outline: none; /* Removes focus outline for better aesthetics */
+  }
+
+  #change-password {
+    background: rgba(255, 255, 255, 0.1); /* Light background for form */
+    padding: 20px;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+  
+  #change-password h2 {
+    color: #fff; /* White text for better contrast */
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+  
+  #change-password form {
+    display: flex;
+    flex-direction: column; /* Stack inputs and labels vertically */
+    gap: 15px; /* Add spacing between form elements */
+  }
+  
+  #change-password label {
+    color: #fff; /* White text for labels */
+    font-size: 16px;
+  }
+  
+  #change-password input[type="password"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px; /* Rounded corners */
+    background-color: #f4f4f4; /* Light background for inputs */
+    color: #333;
+    transition: border-color 0.3s ease;
+  }
+  
+  #change-password input[type="password"]:focus {
+    border-color: #6cae75; /* Highlight border on focus */
+    outline: none;
+  }
+  
+  #change-password button {
+    background: rgb(171, 252, 41); /* Bright button color */
+    color: #000; /* Black text */
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  
+  #change-password button:hover {
+    background: #95c932; /* Slightly darker green on hover */
+    transform: scale(1.05); /* Slight zoom effect */
+  }
+  
+  #change-password button:active {
+    transform: scale(0.95); /* Slightly smaller on click */
+  }
+  
+  #change-email {
+    background: rgba(255, 255, 255, 0.1); /* Light translucent background */
+    padding: 20px;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+  
+  #change-email h2 {
+    color: #fff; /* White text for contrast */
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+  
+  #change-email form {
+    display: flex;
+    flex-direction: column; /* Stack inputs and labels vertically */
+    gap: 15px; /* Space between form elements */
+  }
+  
+  #change-email label {
+    color: #fff; /* White text for labels */
+    font-size: 16px;
+  }
+  
+  #change-email input[type="email"],
+  #change-email input[type="password"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px; /* Rounded corners */
+    background-color: #f4f4f4; /* Light background for inputs */
+    color: #333;
+    transition: border-color 0.3s ease;
+  }
+  
+  #change-email input[type="email"]:focus,
+  #change-email input[type="password"]:focus {
+    border-color: #6cae75; /* Highlight border on focus */
+    outline: none;
+  }
+  
+  #change-email button {
+    background: rgb(171, 252, 41); /* Bright green button */
+    color: #000; /* Black text for readability */
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  
+  #change-email button:hover {
+    background: #95c932; /* Slightly darker green on hover */
+    transform: scale(1.05); /* Slight zoom effect */
+  }
+  
+  #change-email button:active {
+    transform: scale(0.95); /* Slight shrink effect on click */
+  }
+  
+  #profile-info {
+    background: rgba(255, 255, 255, 0.1); /* Light translucent background */
+    padding: 20px; /* Add padding for spacing */
+    border-radius: 8px; /* Rounded corners for modern look */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    width: 80%; /* Centralize the profile box */
+    max-width: 600px; /* Limit maximum width */
+    color: #fff; /* White text for better contrast */
+    text-align: left; /* Align text to the left for better readability */
+    margin: 0 auto; /* Center the content horizontally */
+    font-size: 16px; /* Standard font size */
+    line-height: 1.5; /* Improve readability with line height */
+}
+
+#profile-info h2 {
+    color: #fff; /* White heading text */
+    margin-bottom: 20px; /* Add space below heading */
+    font-size: 24px; /* Larger font size for heading */
+}
+
+#profile-info p {
+    margin: 10px 0; /* Add spacing between paragraphs */
+}
+
+#profile-info strong {
+    color: rgb(171, 252, 41); /* Highlight key info with green color */
+    font-weight: bold; /* Make it bold for emphasis */
+}
+
+/* Inline Error Message */
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Centered Error Box */
+.error-box {
+    position: fixed;
+    top: 60%;
+    left: 85%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(224, 236, 205); /* Light blue background */
+    border: 2px solid rgb(171, 252, 41); /* Blue border */
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    color: #000000; /* Dark blue text */
+    font-size: 16px;
+    text-align: left;
+    display: none; /* Hidden by default */
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.error-box ul {
+    margin: 10px 0 0 20px;
+    padding: 0;
+    list-style-type: disc;
+}
+
+.error-box strong {
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+}

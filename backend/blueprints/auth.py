@@ -118,7 +118,7 @@ def logout():
 @auth.route('/profile',methods=['GET', 'POST'])
 def profile():
     if not 'user_id' in session:
-        return redirect(url_for('main.login'))
+        return redirect(url_for('auth.login'))
     if request.method == 'GET':
         return render_template("profile.html")
     if request.method == 'POST':
@@ -148,13 +148,19 @@ def profile():
                     # Check if the password matches
                     if check_password(old_password, stored_password):
                         changeEmail(new_email, session['user_id'])
-                        return render_template("profile.html", emailerror="Succesfully changed Email.")
+                        return render_template('profile.html', emailerror="Succesfully changed Email.")
                     else:
-                        return render_template('profile.html', emailerror="Wrong old password"), 401
+                        return render_template('profile.html', emailerror="Wrong old password")
                 else:
-                    return render_template('profile.html', emailerror="Password not found for this user."), 400
+                    return render_template('profile.html', emailerror="Password not found for this user.")
             else:
-                return render_template('profile.html', emailerror="User not found."), 404
+                return render_template('profile.html', emailerror="User not found.")
+            
+    return render_template("profile.html", error="Invalid request method.")
 
 
-
+@auth.route('/getProfile',methods=['GET'])
+def getprofile():
+    user = getInfoFromUserId(session['user_id'])
+    if user:
+        return jsonify(user)
