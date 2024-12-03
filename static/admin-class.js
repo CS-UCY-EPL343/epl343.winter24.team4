@@ -48,6 +48,7 @@ window.onload = function() {
 
     addClassButtons.forEach((button) => {
         button.addEventListener('click', () => {
+            //add here the fetch
             const day = button.dataset.day;
             handleAddClass(day);
         });
@@ -179,34 +180,6 @@ function populateClasses(data) {
 
         // // Adjust dropdown height for proper UI display
         // adjustDropdownHeight(dayContainer.closest('.dropdown-content'));
-
-    const addClassButtons = classItem.querySelector('.add-class-form button');
-
-    addClassButtons.addEventListener('click', () => {
-        const apiUrl = '/api/admin/class/insertClass';
-        const Class_ID = addClassButtons.id;
-        const data = { class_id: Class_ID };
-        return fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            else
-            {
-                location.reload();
-            }
-        })
-        .catch(error => {
-            console.error('Error removing the class:', error);
-
-        });
-    });
 }
 
 function getStartOfWeek() {
@@ -405,8 +378,11 @@ function handleAddClass(day) {
 
     adjustDropdownHeight(container.closest('.dropdown-content'));
 
+    //edw tha mpei to fetch gia insert class
+
 }
 
+//function for dropdown
 function adjustDropdownHeight(dropdown) {
     if (dropdown.classList.contains('show')) {
         dropdown.style.maxHeight = `${dropdown.scrollHeight}px`;
@@ -415,9 +391,16 @@ function adjustDropdownHeight(dropdown) {
     }
 }
 
+//idk
 function attachRemoveLogic(studentItem) {
     const removeButton = studentItem.querySelector('.remove-student');
     removeButton.addEventListener('click', () => {
         studentItem.remove();
     });
+}
+
+function getAddedClassDate(button) {
+    const dayElement = button.closest('.day');
+    const addedClassDate = dayElement.dataset.date;
+    return addedClassDate;
 }

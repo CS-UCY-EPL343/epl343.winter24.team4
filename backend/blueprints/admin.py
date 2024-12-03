@@ -100,6 +100,7 @@ def RemoveClass():
             print(data)
             # Check if data is provided
             if not data:
+                print("afcacvaevdeads!")
                 return jsonify({"error": "No data provided in the request body."}), 400
             
 
