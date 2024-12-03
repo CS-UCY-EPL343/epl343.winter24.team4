@@ -1,4 +1,6 @@
 from flask import session, url_for
+
+from scripts.deleteClass import DeleteClass
 from scripts.user.addNewUser import AddNewUserToDb
 from .auth import is_admin
 from flask import Blueprint, redirect, request, render_template
@@ -86,4 +88,32 @@ def InsertClass():
             return jsonify({"error": "Only POST requests are allowed."}), 405
     except Exception as e:
         # Catch any unexpected errors and return a 500 error response
+        return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
+
+
+@admin.route('/api/admin/class/removeClass', methods=['POST'])
+def removeClass():
+    if 'user_id' not in session:
+        return jsonify({"error": "You must be logged in to perform this action."}), 401
+
+    if not session["isAdmin"]:
+        return jsonify({"error": "You must be an admin to remove a class."}), 403
+
+    try:
+        # Get the class_id from the request
+        data = request.get_json()
+        class_id = data.get("class_id")
+
+        if not class_id:
+            return jsonify({"error": "class_id is required."}), 400
+
+        # Call your function to delete the class by class_id
+        success = DeleteClass(class_id)  # Make sure DeleteClass is defined properly
+
+        if success:
+            return jsonify({"message": "Class removed successfully."}), 200
+        else:
+            return jsonify({"error": "Failed to remove class."}), 500
+
+    except Exception as e:
         return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500

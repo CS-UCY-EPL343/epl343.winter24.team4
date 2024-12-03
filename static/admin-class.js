@@ -106,53 +106,59 @@ function populateClasses(data) {
         today.setHours(0, 0, 0, 0); // Reset time for accurate comparison
 
         const dayContainer = document.getElementById(`${days[classDay.getDay()]}-classes`);
+        const addClassButton = document.querySelector(`.add-class[data-day="${days[classDay.getDay()]}"]`);
 
         const classItem = document.createElement('div');
         classItem.classList.add('class-item');
-
-        const studentListId = `student-list-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
         classItem.innerHTML = `
             <p>Hours: ${classInfo.Time_start} - ${classInfo.Time_end}</p>
             <p>Class Type: ${classInfo.Exercise_Type}</p>
             <p>Capacity: ${classInfo.Remaining_Capacity}/${classInfo.Max_capacity}</p>
-            <button class="remove-class">Remove</button>
-            <button class="view-students" data-student-list="${studentListId}">View Students</button>
-            <div id="${studentListId}" class="student-list" style="display: none;"></div>
+            <button class="remove-class" data-class-id="${classInfo.Class_ID}">Remove</button>
+            <button class="view-students">View Students</button>
         `;
 
-        // Hide the remove button if the class date has passed
+        // If the class is in the past, hide the remove button
         const removeButton = classItem.querySelector('.remove-class');
         if (classDay < today) {
-            removeButton.style.display = 'none';
+            removeButton.style.display = 'none'; // Hide if past date
         } else {
-            removeButton.addEventListener('click', () => {
-                classItem.remove();
-                adjustDropdownHeight(dayContainer.closest('.dropdown-content'));
+            removeButton.addEventListener('click', async () => {
+                const classId = removeButton.dataset.classId;
+                try {
+                    const response = await fetch(`/api/admin/class/removeClass`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ class_id: classId }),
+                    });
+
+                    if (response.ok) {
+                        alert('Class removed successfully.');
+                        classItem.remove(); // Remove from DOM
+                        adjustDropdownHeight(dayContainer.closest('.dropdown-content'));
+                    } else {
+                        const errorData = await response.json();
+                        alert(`Error: ${errorData.error}`);
+                    }
+                } catch (error) {
+                    console.error('Error removing class:', error);
+                    alert('An unexpected error occurred.');
+                }
             });
         }
 
-        classItem.querySelector('.view-students').addEventListener('click', (event) => {
-            const studentList = document.getElementById(event.target.getAttribute('data-student-list'));
-            const modal = document.getElementById('view-students-modal');
-            modal.style.display = 'block';
-
-            const modalStudentList = document.getElementById('student-list');
-            modalStudentList.innerHTML = studentList.innerHTML;
-
-            modalStudentList.querySelectorAll('.remove-student').forEach(button => {
-                button.addEventListener('click', () => {
-                    const studentElement = button.parentElement;
-                    studentElement.remove();
-                    const matchingStudent = [...studentList.children].find(child => child.textContent.trim() === studentElement.textContent.trim());
-                    if (matchingStudent) matchingStudent.remove();
-                });
-            });
-        });
+        // Hide "Add Class" button for past days only
+        if (classDay < today) {
+            addClassButton.style.display = 'none'; // Hide "Add Class" for past days
+        }
 
         dayContainer.appendChild(classItem);
     });
 }
+
 
 
 function getStartOfWeek() {
@@ -250,8 +256,19 @@ function populateWeekDates(startOfWeek) {
 
         // Assign the date to the day's dataset for easy tracking
         dayElement.dataset.date = dayDate.toISOString().split('T')[0];
+
+        // Hide or show "Add Class" button based on the date
+        const addClassButton = dayElement.querySelector('.add-class');
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset time to compare just the date
+        if (dayDate < today) {
+            addClassButton.style.display = 'none'; // Hide "Add Class" for past dates
+        } else {
+            addClassButton.style.display = 'block'; // Show for future dates
+        }
     });
 }
+
 
 function handleAddClass(day) {
     const container = document.getElementById(`${day}-classes`);
