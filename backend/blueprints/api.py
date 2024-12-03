@@ -23,7 +23,7 @@ def isLoggedIn():
 def isAdmin():
     if 'user_id' in session:
         if session['isAdmin']:
-            return jsonify(logged_in=True)
+            return jsonify(isAdmin=True)
 
     return jsonify(isAdmin=False)
 

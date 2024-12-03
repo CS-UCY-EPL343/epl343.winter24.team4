@@ -69,23 +69,22 @@ function populateClasses(data){
                 <p>Capacity: ${classItem.Remaining_Capacity}</p>
             `;
             const today = new Date();
-            formattedToday = formatDate(today);
-            const classDate = formatDate(new Date(classItem.Date));
+            const classDate = new Date(classItem.Date);
             if(classItem.Remaining_Capacity === 0){
                 classBox.style.backgroundColor = "#999999";
                 classBox.addEventListener('click', function() {
                     console.log(`Class-box with id "${classBox.id}" clicked!`);
-                    showModal(classItem);
+                    checkIfAdmin(classItem);
                 });
             }
-            if(classDate < formattedToday){
+            if(classDate < today){
                 classBox.style.backgroundColor = "#999999";
                 classBox.style.pointerEvents = "none";
             }
             else{
                 classBox.addEventListener('click', function() {
                     console.log(`Class-box with id "${classBox.id}" clicked!`);
-                    showModal(classItem);
+                    checkIfAdmin(classItem);
                 });
             }
             classBox.addEventListener('click', function() {
@@ -205,8 +204,27 @@ async function isEnrolled(classId) {
     }
 }
 
-
-
+function checkIfAdmin(classItem) {
+    fetch('/api/isAdmin')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.isAdmin) {
+                console.log("User is an admin");
+                window.location.href = "/admin/class";
+            } else {
+                console.log("User is not an admin");
+                showModal(classItem);
+            }
+        })
+        .catch(error => {
+            console.error("Error checking admin status:", error);
+        });
+}
 
 function showModal(classItem) {
     const modal = document.getElementById("enrollModal");

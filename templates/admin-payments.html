@@ -24,7 +24,7 @@
             flex-direction: column;
             width: 500px;
             align-items: flex-start;
-            background-color: #ffffff;
+            background-color: transparent;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-top: 50px;
@@ -49,7 +49,7 @@
         .client-item {
             display: flex;
             align-items: center;
-            background-color: #f0f0f0;
+            background-color: #558823;
             padding: 10px;
             border-radius: 5px;
             cursor: pointer;
@@ -72,8 +72,8 @@
         .client-details {
             display: none;
             padding: 20px;
-            background-color: #ffffff;
-            color: #000000;
+            background-color: transparent;
+            color: #ccc;
             border-radius: 8px;
             width: 100%;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
@@ -94,7 +94,7 @@
             text-align: left;
         }
         .class-table th {
-            background-color: #0056b3;
+            background-color: #558823;
             color: #ffffff;
         }
         .class-table td {
@@ -132,7 +132,7 @@
             padding: 10px 15px;
             font-size: 14px;
             color: #ffffff;
-            background-color: #0056b3;
+            background-color: #558823;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -149,7 +149,7 @@
         </div>
         <div id="clientRecords" class="client-list"></div>
         <div id="clientDetails" class="client-details">
-            <h2>Client Details</h2>
+            <h2></h2>
             <p>Name: <span id="memberName"></span> <span id="memberSurname"></span></p>
             <table class="class-table" id="classTable">
                 <thead>
@@ -169,6 +169,7 @@
             <button class="back-button" onclick="goBack()">Back</button>
         </div>
     </div>
+    
 
     <script>
         let clients = [];

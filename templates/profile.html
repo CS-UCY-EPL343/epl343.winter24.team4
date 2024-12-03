@@ -1,0 +1,78 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="../static/profile.css">
+<script src="../static/profile.js"></script>
+
+<script>profileInfo()</script>
+<body>
+  <div class="container">
+    <div class="menu">
+      <ul>
+        <li id="profile-info-tab" class="active">Profile Info</li>
+        <li id="change-password-tab">Change Password</li>
+        <li id="change-email-tab">Change Email</li>
+        <button id="logout-menu" onclick="window.location.href='/logout';">Logout</button>
+    </ul>
+    </div>
+    <div class="content">
+        <div id="profile-info" class="content-box">
+            <h2>Profile Information</h2>
+            <p>Welcome! Here is your profile information.</p>
+            <p id="fname"> </p>
+            <p id="lname"><strong>Last Name:</strong> </p>
+            <p id="email"><strong>Email:</strong> </p>
+            <p id="birthday"><strong>Birthday:</strong> </p>
+            <p id="phone"><strong>Phone:</strong> </p>
+          </div>
+        
+      <div id="change-password" class="content-box hidden">
+        <h2>Change Password</h2>
+        <form action="/profile" method="POST">
+          <label for="old-password">Old Password:</label>
+          <input type="password" id="old-password" name="old-password" required>
+          <label for="new-password">New Password:</label>
+          <input type="password" id="new-password" name="new-password" required>
+          <label for="confirm-password">Confirm Password:</label>
+          <input type="password" id="confirm-password" name="confirm-password" required>
+          <span id="passwordMatchError" class="error-message"></span>
+
+            <!-- Password Error Box for Criteria -->
+            <div id="passwordErrorBox" class="error-box" style="display: none;">
+                <strong>Password must meet the following criteria:</strong>
+                <ul id="passwordErrorList"></ul>
+            </div><br>
+
+          <button type="submit">Update Password</button>
+          {% if passworderror %}
+            <script>
+                alert("{{ passworderror}}");
+            </script>
+            {% endif %}
+        
+        </form>
+      </div>
+      <div id="change-email" class="content-box hidden">
+        <h2>Change Email</h2>
+        <form method="POST" action="/profile">
+          <label for="new-email">New Email:</label>
+          <input type="email" id="new-email" name="new-email"  required>
+          <label for="old-password">Password For Approval:</label>
+          <input type="password" id="password" name="old-password" required>
+          <button type="submit">Update Email</button>
+          {% if emailerror %}
+                <script>
+                    alert("{{ emailerror}}");
+                </script>
+            {% endif %}
+
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+
+{% endblock %}
