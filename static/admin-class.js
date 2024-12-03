@@ -96,31 +96,6 @@ function thisWeekClasses(startDate, endDate) {
         });
 }
 
-function removeClass(classId){
-    const data = { class_id: classId };
-    const apiUrl = '/api/admin/class/removeClass';
-    return fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        else
-        {
-            location.reload();
-        }
-    })
-    .catch(error => {
-        console.error('Error deleting enrollment in class:', error);
-
-    });
-}
-
 function populateClasses(data) {
     document.querySelectorAll('.day .class-item').forEach(item => item.remove());
     const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
@@ -156,12 +131,6 @@ function populateClasses(data) {
                 adjustDropdownHeight(dayContainer.closest('.dropdown-content'));
             });
         }
-
-        removeButton.addEventListener("click", function () {
-            alert(`You have successfully removed the class "${classItem.Name}"!`);
-            removeClass(classItem.Class_ID);
-        });
-
 
         classItem.querySelector('.view-students').addEventListener('click', (event) => {
             const studentList = document.getElementById(event.target.getAttribute('data-student-list'));
