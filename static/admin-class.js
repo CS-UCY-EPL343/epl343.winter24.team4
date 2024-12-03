@@ -116,13 +116,12 @@ function populateClasses(data) {
             <p>Class Type: ${classInfo.Exercise_Type}</p>
             <p>Capacity: ${classInfo.Remaining_Capacity}/${classInfo.Max_capacity}</p>
             <button class="remove-class" data-class-id="${classInfo.Class_ID}">Remove</button>
-            <button class="view-students">View Students</button>
+            <button class="view-students" id="${classInfo.Class_ID}">View Students</button>
         `;
 
-        // If the class is in the past, hide the remove button
         const removeButton = classItem.querySelector('.remove-class');
         if (classDay < today) {
-            removeButton.style.display = 'none'; // Hide if past date
+            removeButton.style.display = 'none';
         } else {
             removeButton.addEventListener('click', async () => {
                 const classId = removeButton.dataset.classId;
@@ -137,7 +136,7 @@ function populateClasses(data) {
 
                     if (response.ok) {
                         alert('Class removed successfully.');
-                        classItem.remove(); // Remove from DOM
+                        classItem.remove();
                         adjustDropdownHeight(dayContainer.closest('.dropdown-content'));
                     } else {
                         const errorData = await response.json();
@@ -150,14 +149,102 @@ function populateClasses(data) {
             });
         }
 
-        // Hide "Add Class" button for past days only
+        const viewEnrollments = classItem.querySelector('.view-students');
+
+        viewEnrollments.addEventListener('click' , function () {
+            const classId = viewEnrollments.id;
+            const apiUrl = `/api/fetch-enrollments-for-class?class_id=${classId}`;
+            return fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Data received:', data);
+                    showEnrollments(data,classId);
+                })
+                .catch(error => {
+                    console.error('Error fetching week classes:', error);
+                });
+        });
+
+
         if (classDay < today) {
-            addClassButton.style.display = 'none'; // Hide "Add Class" for past days
+            addClassButton.style.display = 'none';
         }
 
         dayContainer.appendChild(classItem);
     });
 }
+
+function showEnrollments(data, classId) {
+    // Get the modal or container for displaying enrollments
+    const modal = document.getElementById('view-students-modal');
+    const modalContent = modal.querySelector('.modal-content');
+
+    // Clear any previous content
+    modalContent.innerHTML = `
+        <h2>Enrollments for Class ID: ${classId}</h2>
+        <div class="enrollment-list"></div>
+    `;
+
+    const enrollmentList = modalContent.querySelector('.enrollment-list');
+
+    // Populate enrollments
+    if (data.length === 0) {
+        enrollmentList.innerHTML = '<p>No enrollments found for this class.</p>';
+    } else {
+        data.forEach(enrollment => {
+            const studentItem = document.createElement('div');
+            studentItem.classList.add('enrollment-item');
+
+            studentItem.innerHTML = `
+                <p><strong>Name:</strong> ${enrollment.FName} ${enrollment.LName}</p>
+                <p><strong>Email:</strong> ${enrollment.Email}</p>
+                <button class="remove-enrollment" data-user-id="${enrollment.User_ID}" data-class-id="${classId}">Remove</button>
+            `;
+
+            const removeButton = studentItem.querySelector('.remove-enrollment');
+            removeButton.addEventListener('click', async () => {
+                const userId = removeButton.dataset.userId;
+
+                try {
+                    const response = await fetch('/api/remove-enrollment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            user_id: userId,
+                            class_id: classId
+                        }),
+                    });
+
+                    if (response.ok) {
+                        const responseData = await response.json();
+                        alert(responseData.message);
+                        studentItem.remove();
+                    } else {
+                        const errorData = await response.json();
+                        alert(`Error: ${errorData.error}`);
+                    }
+                } catch (error) {
+                    console.error('Error removing enrollment:', error);
+                    alert('An unexpected error occurred.');
+                }
+            });
+
+            enrollmentList.appendChild(studentItem);
+        });
+    }
+
+    // Show the modal
+    modal.style.display = 'block';
+}
+
+
 
 
 

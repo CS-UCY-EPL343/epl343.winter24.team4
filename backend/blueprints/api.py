@@ -1,7 +1,10 @@
 from flask import Blueprint, redirect, request, render_template, jsonify, session, url_for
 
+from backend.blueprints.calendar import enrollments
+from scripts.getEnrollmentsForClass import getEnrollmentsForClass
 from scripts.payment.addPayment import addPayment
 from scripts.payment.selectPaymentTypes import PaymentTypes
+from scripts.removeEnrollment import removeEnroll
 from scripts.selectAllUsers import getAllUsers,getUserClasses
 from scripts.user.addNewUser import AddNewUserToDb
 import bcrypt
@@ -83,3 +86,34 @@ def getCurrentUserClasses():
     if not 'user_id' in session:
             return jsonify({"error": "You are not logged in"})
     return jsonify(getUserClasses(session['user_id']))
+
+@api.route('/api/fetch-enrollments-for-class', methods=['GET'])
+def getEnrollmentForClass():
+    if not 'user_id' in session:
+            return jsonify({"error": "You are not logged in"})
+    if session['isAdmin']:
+        enrollment = getEnrollmentsForClass(request.args.get('class_id'))
+        return jsonify(enrollment)
+
+@api.route('/api/remove-enrollment', methods=['POST'])
+def removeEnrollment():
+    if 'user_id' not in session:
+        return jsonify({"error": "You are not logged in"}), 401
+    if session['isAdmin']:
+        try:
+            data = request.json
+            user_id = data.get('user_id')
+            class_id = data.get('class_id')
+
+            if not class_id or not user_id:
+                return jsonify({"error": "Missing required fields (class_id, user_id)"}), 400
+
+            result = removeEnroll(user_id, class_id)
+
+            if result:
+                return jsonify({"message": "Enrollment deleted successfully"}), 201
+            else:
+                return jsonify({"error": "Failed to delete enrollment"}), 500
+
+        except Exception as e:
+            return jsonify({"error": f"An error occurred: {str(e)}"}), 500
