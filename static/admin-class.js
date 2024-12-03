@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const prevWeekButton = document.querySelector('.prev-week');
     const nextWeekButton = document.querySelector('.next-week');
-    
+
     const monday = getStartOfWeek();
     const sunday = new Date(monday);
     sunday.setDate(sunday.getDate()+6);
-    
+
     const formattedMonday = formatDate(monday);
     const formattedSunday = formatDate(sunday);
 
@@ -17,22 +17,22 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => {
                 console.error('Error fetching classes:', error);
-            });  
+            });
 
     updateWeekDisplay(monday);
-    
+
     prevWeekButton.addEventListener('click', () => {
         clearClassBoxes();
         getLastWeekFromCurrent(monday);
         monday.setDate(monday.getDate()-7);
     });
-    
+
     nextWeekButton.addEventListener('click', () => {
         clearClassBoxes();
         getNextWeekFromCurrent(monday);
         monday.setDate(monday.getDate()+7);
     });
-            
+
     document.querySelectorAll('.arrow').forEach(arrow => {
         arrow.addEventListener('click', function () {
             const day = this.parentElement;
@@ -97,65 +97,63 @@ function thisWeekClasses(startDate, endDate) {
 }
 
 function populateClasses(data) {
-    // Clear existing classes before populating
     document.querySelectorAll('.day .class-item').forEach(item => item.remove());
     const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 
-        // Add each class to the corresponding day
-        data.classes.forEach(classInfo => {
-            const classDay = new Date(classInfo.Date);
-            console.log(days[classDay.getDay()]);
-            const dayContainer = document.getElementById(`${days[classDay.getDay()]}-classes`);
+    data.classes.forEach(classInfo => {
+        const classDay = new Date(classInfo.Date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset time for accurate comparison
 
-            const classItem = document.createElement('div');
-            classItem.classList.add('class-item');
-            
-            // Create unique ID for student list
-            const studentListId = `student-list-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-            
-            classItem.innerHTML = `
-                <p>Hours: ${classInfo.Time_start} - ${classInfo.Time_end}</p>
-                <p>Class Type: ${classInfo.Exercise_Type}</p>
-                <p>Capacity: ${classInfo.Remaining_Capacity}/${classInfo.Max_capacity}</p>
-                <button class="remove-class">Remove</button>
-                <button class="view-students" data-student-list="${studentListId}">View Students</button>
-                <div id="${studentListId}" class="student-list" style="display: none;"></div>
-            `;
+        const dayContainer = document.getElementById(`${days[classDay.getDay()]}-classes`);
 
+        const classItem = document.createElement('div');
+        classItem.classList.add('class-item');
 
-            // Add logic for removing classes
-            classItem.querySelector('.remove-class').addEventListener('click', () => {
+        const studentListId = `student-list-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+        classItem.innerHTML = `
+            <p>Hours: ${classInfo.Time_start} - ${classInfo.Time_end}</p>
+            <p>Class Type: ${classInfo.Exercise_Type}</p>
+            <p>Capacity: ${classInfo.Remaining_Capacity}/${classInfo.Max_capacity}</p>
+            <button class="remove-class">Remove</button>
+            <button class="view-students" data-student-list="${studentListId}">View Students</button>
+            <div id="${studentListId}" class="student-list" style="display: none;"></div>
+        `;
+
+        // Hide the remove button if the class date has passed
+        const removeButton = classItem.querySelector('.remove-class');
+        if (classDay < today) {
+            removeButton.style.display = 'none';
+        } else {
+            removeButton.addEventListener('click', () => {
                 classItem.remove();
                 adjustDropdownHeight(dayContainer.closest('.dropdown-content'));
             });
+        }
 
-            // Add logic for viewing students
-            classItem.querySelector('.view-students').addEventListener('click', (event) => {
-                const studentList = document.getElementById(event.target.getAttribute('data-student-list'));
-                const modal = document.getElementById('view-students-modal');
-                modal.style.display = 'block';
+        classItem.querySelector('.view-students').addEventListener('click', (event) => {
+            const studentList = document.getElementById(event.target.getAttribute('data-student-list'));
+            const modal = document.getElementById('view-students-modal');
+            modal.style.display = 'block';
 
-                const modalStudentList = document.getElementById('student-list');
-                modalStudentList.innerHTML = studentList.innerHTML;
+            const modalStudentList = document.getElementById('student-list');
+            modalStudentList.innerHTML = studentList.innerHTML;
 
-                // Attach event for removing students
-                modalStudentList.querySelectorAll('.remove-student').forEach(button => {
-                    button.addEventListener('click', () => {
-                        const studentElement = button.parentElement;
-                        studentElement.remove();
-                        const matchingStudent = [...studentList.children].find(child => child.textContent.trim() === studentElement.textContent.trim());
-                        if (matchingStudent) matchingStudent.remove();
-                    });
+            modalStudentList.querySelectorAll('.remove-student').forEach(button => {
+                button.addEventListener('click', () => {
+                    const studentElement = button.parentElement;
+                    studentElement.remove();
+                    const matchingStudent = [...studentList.children].find(child => child.textContent.trim() === studentElement.textContent.trim());
+                    if (matchingStudent) matchingStudent.remove();
                 });
             });
-
-            // Append class item to the container
-            dayContainer.appendChild(classItem);
         });
 
-        // // Adjust dropdown height for proper UI display
-        // adjustDropdownHeight(dayContainer.closest('.dropdown-content'));
+        dayContainer.appendChild(classItem);
+    });
 }
+
 
 function getStartOfWeek() {
     const today = new Date();
@@ -199,10 +197,10 @@ function getNextWeekFromCurrent(currentMonday) {
 }
 
 function getLastWeekFromCurrent(currentMonday) {
-            
+
     const lastMonday = new Date(currentMonday);
     lastMonday.setDate(lastMonday.getDate() - 7);
-    
+
     updateWeekDisplay(lastMonday);
 
     const lastSunday = new Date(lastMonday);
@@ -256,100 +254,87 @@ function populateWeekDates(startOfWeek) {
 }
 
 function handleAddClass(day) {
+    const container = document.getElementById(`${day}-classes`);
+    const addClassButton = document.querySelector(`.add-class[data-day="${day}"]`);
+
+    // Hide the "Add Class" button
+    addClassButton.style.display = 'none';
+
+    // Get the date from the day's dataset
+    const selectedDate = container.closest('.day').dataset.date;
+
     const form = document.createElement('form');
     form.classList.add('add-class-form');
     form.innerHTML = `
-        <input type="text" placeholder="Class Hours (e.g., 10:00 - 11:00)" required class="class-hours">
-        <select class="class-type">
-            <option value="" disabled selected>Select Class Type</option>
-            <option value="Yoga">Yoga</option>
-            <option value="Dance">Dance</option>
-            <option value="Pilates">Pilates</option>
-            <option value="Zumba">Zumba</option>
+        <label for="date">Date:</label>
+        <input type="date" name="date" value="${selectedDate}" required readonly>
+        
+        <label for="time_start">Start Time:</label>
+        <input type="time" name="time_start" required>
+        
+        <label for="time_end">End Time:</label>
+        <input type="time" name="time_end" required>
+        
+        <label for="max_capacity">Max Capacity:</label>
+        <input type="number" name="max_capacity" placeholder="Max Capacity" min="1" required>
+        
+        <label for="price">Price:</label>
+        <input type="number" name="price" placeholder="Price" step="0.01" min="0" required>
+        
+        <label for="ex_id">Exercise Type:</label>
+        <select name="ex_id" required>
+            <option value="1">Yoga</option>
+            <option value="2">Dance</option>
+            <option value="3">Pilates</option>
+            <option value="4">Zumba</option>
         </select>
-        <input type="number" placeholder="Capacity (e.g., 20)" required class="class-capacity">
-        <button type="submit">Add</button>
+        
+        <button type="submit">Add Class</button>
         <button type="button" class="cancel">Cancel</button>
     `;
 
-    const container = document.getElementById(`${day}-classes`);
     container.appendChild(form);
 
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
         event.preventDefault();
-        const hours = form.querySelector('.class-hours').value;
-        const type = form.querySelector('.class-type').value;
-        const capacity = form.querySelector('.class-capacity').value;
 
-        const classItem = document.createElement('div');
-        classItem.classList.add('class-item');
-        const studentListId = `student-list-${Date.now()}`;
-        classItem.innerHTML = `
-            <p>Hours: ${hours}</p>
-            <p>Class Type: ${type}</p>
-            <p>Capacity: ${capacity}</p>
-            <button class="remove-class">Remove</button>
-            <button class="view-students" data-student-list="${studentListId}">View Students</button>
-            <div id="${studentListId}" class="student-list" style="display: none;"></div>
-        `;
+        // Collect form data
+        const formData = new FormData(form);
+        const jsonData = Object.fromEntries(formData.entries());
 
-        classItem.querySelector('.remove-class').addEventListener('click', () => {
-            classItem.classList.add('removing'); // Add transition class
-            setTimeout(() => {
-                classItem.remove(); // Remove after the transition
-                adjustDropdownHeight(container.closest('.dropdown-content'));
-            }, 300); // Match CSS transition duration
-        });
-
-        classItem.querySelector('.view-students').addEventListener('click', (event) => {
-            const studentListId = event.target.getAttribute('data-student-list');
-            const studentList = document.getElementById(studentListId);
-            const modal = document.getElementById('view-students-modal');
-            modal.style.display = 'block';
-
-            const modalStudentList = document.getElementById('student-list');
-            modalStudentList.innerHTML = studentList.innerHTML;
-
-            modalStudentList.querySelectorAll('.remove-student').forEach(button => {
-                button.addEventListener('click', () => {
-                    const studentElement = button.parentElement;
-                    studentElement.remove();
-                    const matchingStudent = [...studentList.children].find(child => child.textContent.trim() === studentElement.textContent.trim());
-                    if (matchingStudent) matchingStudent.remove();
-                });
+        try {
+            const response = await fetch('/api/admin/class/insertClass', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(jsonData),
             });
 
-            const studentForm = document.getElementById('student-form');
-            const studentNameInput = document.getElementById('student-name');
-
-            studentForm.addEventListener('submit', (event) => {
-                event.preventDefault();
-                const studentName = studentNameInput.value.trim();
-                if (studentName) {
-                    const studentItem = document.createElement('p');
-                    studentItem.innerHTML = `${studentName} <button class="remove-student">X</button>`;
-                    studentList.appendChild(studentItem);
-                    const modalStudentItem = studentItem.cloneNode(true);
-                    modalStudentList.appendChild(modalStudentItem);
-                    attachRemoveLogic(studentItem);
-                    attachRemoveLogic(modalStudentItem);
-                    studentNameInput.value = '';
-                }
-            });
-        });
-
-        container.appendChild(classItem);
-        form.remove();
-        adjustDropdownHeight(container.closest('.dropdown-content'));
+            if (response.ok) {
+                const responseData = await response.json();
+                alert(responseData.message);
+                form.remove(); // Remove the form upon success
+                addClassButton.style.display = 'block'; // Show the "Add Class" button again
+                clearClassBoxes();
+                const monday = getStartOfWeek();
+                thisWeekClasses(formatDate(monday), formatDate(new Date(monday.getTime() + 6 * 86400000)));
+            } else {
+                const errorData = await response.json();
+                alert(`Error: ${errorData.error}`);
+            }
+        } catch (error) {
+            console.error('Error submitting class:', error);
+            alert('An unexpected error occurred.');
+        }
     });
 
     form.querySelector('.cancel').addEventListener('click', () => {
         form.remove();
-        adjustDropdownHeight(container.closest('.dropdown-content'));
+        addClassButton.style.display = 'block'; // Show the "Add Class" button again
     });
-
-    adjustDropdownHeight(container.closest('.dropdown-content'));
 }
+
 
 function adjustDropdownHeight(dropdown) {
     if (dropdown.classList.contains('show')) {
