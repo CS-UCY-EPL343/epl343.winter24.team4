@@ -45,7 +45,7 @@ body {
 }
 
 .class-box {
-    background-color: rgb(171, 252, 41);
+    background-color: rgb(125, 189, 21);
     border-radius: 5px;
     border: 1px solid black;
     margin-top: 10px;
@@ -112,8 +112,8 @@ body {
 }
 
 #enrollBtn {
-    background-color: rgb(171, 252, 41);
-    color: white;
+    background-color: rgb(125, 189, 21);
+    color: rgb(0, 0, 0);
     border: none;
     padding: 12px 20px;
     text-align: center;
@@ -126,12 +126,12 @@ body {
 }
 
 #enrollBtn:hover {
-    background-color: #45a049;
+    background-color: #36883a;
     transform: scale(1.05);
 }
 
 #enrollBtn:active {
-    background-color: #388e3c;
+    background-color: #337936;
     transform: scale(0.98);
 }
 

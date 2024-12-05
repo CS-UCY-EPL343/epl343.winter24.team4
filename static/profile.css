@@ -39,7 +39,7 @@ body {
   
   .menu ul li.active,
   .menu ul li:hover {
-    background: rgb(171, 252, 41);
+    background: rgb(125, 189, 21);
     font-weight: bold;
     color: black;
   }
@@ -129,7 +129,7 @@ body {
   }
   
   #change-password button {
-    background: rgb(171, 252, 41); /* Bright button color */
+    background: rgb(125, 189, 21); /* Bright button color */
     color: #000; /* Black text */
     border: none;
     border-radius: 5px; /* Rounded corners */
@@ -140,7 +140,7 @@ body {
   }
   
   #change-password button:hover {
-    background: #95c932; /* Slightly darker green on hover */
+    background: rgb(125, 189, 21); /* Slightly darker green on hover */
     transform: scale(1.05); /* Slight zoom effect */
   }
   
@@ -190,7 +190,7 @@ body {
   }
   
   #change-email button {
-    background: rgb(171, 252, 41); /* Bright green button */
+    background: rgb(125, 189, 21); /* Bright green button */
     color: #000; /* Black text for readability */
     border: none;
     border-radius: 5px; /* Rounded corners */
@@ -201,7 +201,7 @@ body {
   }
   
   #change-email button:hover {
-    background: #95c932; /* Slightly darker green on hover */
+    background: rgb(125, 189, 21); /* Slightly darker green on hover */
     transform: scale(1.05); /* Slight zoom effect */
   }
   
@@ -234,7 +234,7 @@ body {
 }
 
 #profile-info strong {
-    color: rgb(171, 252, 41); /* Highlight key info with green color */
+    color: rgb(125, 189, 21); /* Highlight key info with green color */
     font-weight: bold; /* Make it bold for emphasis */
 }
 
@@ -252,7 +252,7 @@ body {
     left: 85%;
     transform: translate(-50%, -50%);
     background-color: rgb(224, 236, 205); /* Light blue background */
-    border: 2px solid rgb(171, 252, 41); /* Blue border */
+    border: 2px solid rgb(125, 189, 21); /* Blue border */
     border-radius: 10px;
     padding: 20px;
     width: 300px;
